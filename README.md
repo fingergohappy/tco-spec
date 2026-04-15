@@ -88,11 +88,34 @@ Agents use these tags to identify message types and route responses correctly.
 
 ## Installation
 
-Install as a Claude Code plugin:
+### Claude Code
+
+Clone to the Claude Code plugins directory:
 
 ```bash
-# Clone to your plugins directory
 git clone https://github.com/fingergohappy/tco-spec.git ~/.claude/plugins/tco-spec
+```
+
+After installation, skills will be available with the `tco-spec:` prefix:
+
+```
+/tco-spec:spec-feature login-system
+/tco-spec:spec-implement docs/spec/login_feature.md
+```
+
+### Codex (OpenAI)
+
+Clone to the Codex skills directory:
+
+```bash
+git clone https://github.com/fingergohappy/tco-spec.git ~/.codex/skills/tco-spec
+```
+
+After installation, skills will be available with the `tco-spec:` prefix:
+
+```
+/tco-spec:spec-feature login-system
+/tco-spec:spec-implement docs/spec/login_feature.md
 ```
 
 ## Requirements
