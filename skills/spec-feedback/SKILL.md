@@ -59,8 +59,7 @@ argument-hint: [目标pane_id]
 
 ---
 
-*仔细检查是否和设计文档实现一致，确保没有遗漏任何细节。
-同时检查是否有bug和缺陷*
+请调用 tco-spec:spec-handle-feedback skill 检查以上反馈。
 
 [feedback from {当前AI工具名称}: {执行结果简要描述}, pane_id: {当前pane_id}]
 ```
