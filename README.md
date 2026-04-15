@@ -18,6 +18,63 @@ tco-spec coordinates multiple AI agents (Claude Code, Codex, OpenCode, etc.) wor
                   └─────────────┘
 ```
 
+## Installation
+
+### Claude Code
+
+Register this repository as a plugin marketplace, then install:
+
+```
+/plugin marketplace add fingergohappy/tco-spec
+```
+
+Install the plugin:
+
+```
+/plugin install tco-spec@tco-spec
+```
+
+After installation, restart Claude Code. Skills will be available with the `tco-spec:` prefix:
+
+```
+/tco-spec:spec-feature login-system
+/tco-spec:spec-implement docs/spec/login_feature.md
+```
+
+<details>
+<summary>Alternative: local development</summary>
+
+```bash
+claude --plugin-dir /path/to/tco-spec
+```
+
+</details>
+
+### Codex (OpenAI)
+
+Use the built-in `$skill-installer` inside Codex to install from GitHub:
+
+```
+$skill-installer install https://github.com/fingergohappy/tco-spec/tree/main/skills/spec-feature
+```
+
+Repeat for each skill you need, or install all at once by cloning:
+
+```bash
+# User scope (available across all projects)
+git clone https://github.com/fingergohappy/tco-spec.git ~/.agents/skills/tco-spec
+
+# Project scope (shared with team)
+git clone https://github.com/fingergohappy/tco-spec.git .agents/skills/tco-spec
+```
+
+After installation, restart Codex. Skills auto-discover on startup and can be invoked by name:
+
+```
+$spec-feature login-system
+$spec-implement docs/spec/login_feature.md
+```
+
 ## Skills
 
 | Skill | Purpose |
@@ -85,63 +142,6 @@ The originator receives feedback and `tco-spec:spec-handle-feedback` triggers au
 ```
 
 Agents use these tags to identify message types and route responses correctly.
-
-## Installation
-
-### Claude Code
-
-Register this repository as a plugin marketplace, then install:
-
-```
-/plugin marketplace add fingergohappy/tco-spec
-```
-
-Then install the plugin:
-
-```
-/plugin install tco-spec
-```
-
-After installation, restart Claude Code. Skills will be available with the `tco-spec:` prefix:
-
-```
-/tco-spec:spec-feature login-system
-/tco-spec:spec-implement docs/spec/login_feature.md
-```
-
-<details>
-<summary>Alternative: local development</summary>
-
-```bash
-claude --plugin-dir /path/to/tco-spec
-```
-
-</details>
-
-### Codex (OpenAI)
-
-Use the built-in `$skill-installer` inside Codex to install from GitHub:
-
-```
-$skill-installer install https://github.com/fingergohappy/tco-spec/tree/main/skills/spec-feature
-```
-
-Repeat for each skill you need, or install all at once by cloning:
-
-```bash
-# User scope (available across all projects)
-git clone https://github.com/fingergohappy/tco-spec.git ~/.agents/skills/tco-spec
-
-# Project scope (shared with team)
-git clone https://github.com/fingergohappy/tco-spec.git .agents/skills/tco-spec
-```
-
-After installation, restart Codex. Skills auto-discover on startup and can be invoked by name:
-
-```
-$spec-feature login-system
-$spec-implement docs/spec/login_feature.md
-```
 
 ## Requirements
 
