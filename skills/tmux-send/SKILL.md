@@ -29,16 +29,14 @@ Check `$ARGUMENTS` first, then fall back to natural language parsing:
 
 ## Sending content
 
-Use tmux paste buffer directly (no external script needed):
+使用脚本 `scripts/tmux_send.sh` 发送内容.
+
 
 ```bash
-# 1. Verify the pane exists
-tmux list-panes -t "<pane_id>"
+# 方式 1：直接传内容
+bash scripts/tmux_send.sh "<pane_id>" "<content>"
 
-# 2. Send content via paste buffer, then press Enter
-tmux load-buffer - <<< "<content>"
-tmux paste-buffer -p -r -t "<pane_id>"
-tmux send-keys -t "<pane_id>" Enter
+# 方式 2：传文件路径（适合长内容）
+bash scripts/tmux_send.sh "<pane_id>" "/tmp/message.txt"
 ```
 
-This handles multi-line content correctly via paste buffer, then auto-presses Enter to execute.

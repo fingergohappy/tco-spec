@@ -18,9 +18,9 @@ argument-hint: [目标pane_id]
 
 ## 执行步骤
 
-1. 获取当前 pane ID:
+1. 获取当前 pane ID（agent 自身所在的 pane）:
    ```bash
-   tmux display-message -p '#{pane_id}'
+   echo $TMUX_PANE
    ```
 2. 从收到的 `[task from ...]` 标签中提取目标 pane_id
 3. 生成反馈消息
@@ -61,7 +61,7 @@ argument-hint: [目标pane_id]
 
 请调用 tco-spec:spec-handle-feedback skill 检查以上反馈。
 
-[feedback from {当前AI工具名称}: {执行结果简要描述}, pane_id: {当前pane_id}]
+[feedback from {当前AI工具名称}, pane_id: {当前pane_id}: {执行结果简要描述}]
 ```
 
 ## 生成规则

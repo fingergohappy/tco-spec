@@ -16,9 +16,9 @@ argument-hint: [文档路径, 如 docs/spec/xxx_feature.md]
 
 ## 执行步骤
 
-1. 获取当前 pane ID:
+1. 获取当前 pane ID（agent 自身所在的 pane）:
    ```bash
-   tmux display-message -p '#{pane_id}'
+   echo $TMUX_PANE
    ```
 2. 判断输入来源:
    - 如果 $ARGUMENTS 包含 `.md` 文件路径 → 读取文档内容，走模式 B
@@ -50,7 +50,7 @@ argument-hint: [文档路径, 如 docs/spec/xxx_feature.md]
 
 执行完成后，调用 tco-spec:spec-feedback skill 向 pane {当前pane_id} 反馈结果。
 
-[task from {当前AI工具名称, 如 Claude Code/Codex/OpenCode 等}: {当前对话的简要描述}, pane_id: {当前pane_id}]
+[task from {当前AI工具名称, 如 Claude Code/Codex/OpenCode 等}, pane_id: {当前pane_id}: {当前对话的简要描述}]
 ```
 
 ## 模式 B：发送已有文档
@@ -67,7 +67,7 @@ argument-hint: [文档路径, 如 docs/spec/xxx_feature.md]
 
 执行完成后，调用 tco-spec:spec-feedback skill 向 pane {当前pane_id} 反馈结果。
 
-[task from {当前AI工具名称, 如 Claude Code/Codex/OpenCode 等}: {当前对话的简要描述}, pane_id: {当前pane_id}]
+[task from {当前AI工具名称, 如 Claude Code/Codex/OpenCode 等}, pane_id: {当前pane_id}: {当前对话的简要描述}]
 ```
 
 ## 生成规则
