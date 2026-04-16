@@ -14,7 +14,7 @@ argument-hint: [变更名称]
 # spec-change
 
 记录变更的全貌：改什么、为什么改、怎么改。变更文档让修改可追溯，
-也让 tco-spec:spec-review 能对照检查实现是否偏离计划。
+也让 ai-kit:spec-review 能对照检查实现是否偏离计划。
 
 ## 两种模式
 

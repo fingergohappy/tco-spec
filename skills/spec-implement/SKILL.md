@@ -2,7 +2,7 @@
 name: spec-implement
 description: |
   将讨论结论或设计文档发送到指定 tmux pane，让另一个 AI agent 去执行。
-  执行完成后对方会通过 tco-spec:tmux-send 反馈结果。
+  执行完成后对方会通过 ai-kit:tmux-send 反馈结果。
   当用户完成设计讨论想把任务分发出去时使用，支持从对话总结或直接发送已有文档。
   即使用户只是说"发过去"、"send 过去"、"开始干"、"implement"，
   都应触发此 skill。
@@ -25,7 +25,7 @@ argument-hint: [文档路径, 如 docs/spec/xxx_feature.md]
    - 否则 → 从当前对话上下文总结，走模式 A
 3. **更新文档状态为 `doing`**：如果输入来源是已有文档，将该文档 frontmatter 中的 `status` 从 `draft` 改为 `doing`
 4. 生成消息内容（末尾附带反馈指令）
-5. 通过 tco-spec:tmux-send skill 发送（由 tco-spec:tmux-send 负责确定目标 pane）
+5. 通过 ai-kit:tmux-send skill 发送（由 ai-kit:tmux-send 负责确定目标 pane）
 
 ## 模式 A：从对话总结
 
@@ -48,7 +48,7 @@ argument-hint: [文档路径, 如 docs/spec/xxx_feature.md]
 
 ---
 
-执行完成后，调用 tco-spec:spec-feedback skill 向 pane {当前pane_id} 反馈结果。
+执行完成后，调用 ai-kit:spec-feedback skill 向 pane {当前pane_id} 反馈结果。
 
 [task from {当前AI工具名称, 如 Claude Code/Codex/OpenCode 等}, pane_id: {当前pane_id}: {当前对话的简要描述}]
 ```
@@ -65,7 +65,7 @@ argument-hint: [文档路径, 如 docs/spec/xxx_feature.md]
 
 ---
 
-执行完成后，调用 tco-spec:spec-feedback skill 向 pane {当前pane_id} 反馈结果。
+执行完成后，调用 ai-kit:spec-feedback skill 向 pane {当前pane_id} 反馈结果。
 
 [task from {当前AI工具名称, 如 Claude Code/Codex/OpenCode 等}, pane_id: {当前pane_id}: {当前对话的简要描述}]
 ```
@@ -80,4 +80,4 @@ argument-hint: [文档路径, 如 docs/spec/xxx_feature.md]
 
 ## 发送方式
 
-使用 tco-spec:tmux-send skill 发送，由它负责处理目标 pane 的选择。
+使用 ai-kit:tmux-send skill 发送，由它负责处理目标 pane 的选择。

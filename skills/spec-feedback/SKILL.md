@@ -24,7 +24,7 @@ argument-hint: [目标pane_id]
    ```
 2. 从收到的 `[task from ...]` 标签中提取目标 pane_id
 3. 生成反馈消息
-4. 通过 tco-spec:tmux-send skill 发送到目标 pane
+4. 通过 ai-kit:tmux-send skill 发送到目标 pane
 
 ## 反馈格式
 
@@ -59,7 +59,7 @@ argument-hint: [目标pane_id]
 
 ---
 
-请调用 tco-spec:spec-handle-feedback skill 检查以上反馈。
+请调用 ai-kit:spec-handle-feedback skill 检查以上反馈。
 
 [feedback from {当前AI工具名称}, pane_id: {当前pane_id}: {执行结果简要描述}]
 ```
@@ -73,4 +73,4 @@ argument-hint: [目标pane_id]
 
 ## 发送方式
 
-使用 tco-spec:tmux-send skill 发送反馈消息到目标 pane。
+使用 ai-kit:tmux-send skill 发送反馈消息到目标 pane。

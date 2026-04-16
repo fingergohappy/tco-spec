@@ -1,17 +1,17 @@
 {
-  "name": "tco-spec",
+  "name": "ai-kit",
   "owner": {
     "name": "finger",
     "email": "fingergohappy@gmail.com"
   },
   "metadata": {
-    "description": "Multi-agent collaboration plugin — spec-driven workflow via tmux",
+    "description": "Personal AI coding toolkit — skills, commands, and subagents",
     "version": "1.0.0"
   },
   "plugins": [
     {
-      "name": "tco-spec",
-      "description": "Spec-driven multi-agent collaboration workflow: feature design, change tracking, task dispatch, code review, and feedback loop via tmux",
+      "name": "ai-kit",
+      "description": "Multi-agent collaboration workflow: feature design, task dispatch, code review, and feedback loop via tmux",
       "source": "./",
       "strict": false,
       "skills": [

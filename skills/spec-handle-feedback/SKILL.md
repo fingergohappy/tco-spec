@@ -1,7 +1,7 @@
 ---
 name: spec-handle-feedback
 description: |
-  处理来自另一个 AI agent 的执行反馈，调用 tco-spec:spec-review 审查结果，
+  处理来自另一个 AI agent 的执行反馈，调用 ai-kit:spec-review 审查结果，
   根据审查结论决定是否继续修复。当收到带有 [feedback from ...] 标签的
   消息时自动触发。即使用户只是说"处理反馈"、"看看反馈"、
   "检查结果"，都应触发此 skill。
@@ -27,7 +27,7 @@ argument-hint: [可选: 反馈消息内容]
    - **第三层：代码风格** — 检查命名规范、代码组织、接口设计是否符合项目约定
 4. 根据审查结果决定下一步：
    - 全部通过 → 将关联的 feature/change 文档 frontmatter 中的 `status` 改为 `done`，结束，通知用户
-   - 有 CRITICAL/HIGH 问题 → 调用 tco-spec:spec-implement 发送修复任务（再来一轮）
+   - 有 CRITICAL/HIGH 问题 → 调用 ai-kit:spec-implement 发送修复任务（再来一轮）
    - 只有 MEDIUM/LOW 问题 → 将关联的 feature/change 文档 frontmatter 中的 `status` 改为 `done`，结束，将审查结果告知用户，由用户决定
 5. 如果进入新一轮修复，累计轮次，达到 3 轮上限时停下来让用户决定
 
@@ -44,11 +44,11 @@ argument-hint: [可选: 反馈消息内容]
 - **一致性检查**：命名规范、代码风格、接口契约是否与设计文档一致
 - 发现任何偏差都必须标记为问题，即使看起来是"小问题"也不得忽略
 
-## 调用 tco-spec:spec-review 的规则
+## 调用 ai-kit:spec-review 的规则
 
-- 如果原始任务有对应的 feature/change 文档 → 正常调用 tco-spec:spec-review 生成审查报告
+- 如果原始任务有对应的 feature/change 文档 → 正常调用 ai-kit:spec-review 生成审查报告
 - 如果原始任务**没有文档**（如模式 A 从对话总结的任务）→ **不生成审查文档**，
-  直接在对话中完成审查，将审查结果通过 tco-spec:spec-implement 发送过去
+  直接在对话中完成审查，将审查结果通过 ai-kit:spec-implement 发送过去
 
 ## 终止条件
 
