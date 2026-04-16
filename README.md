@@ -88,7 +88,7 @@ $spec-implement docs/spec/login_feature.md
 | `tco-spec:spec-check-review` | Verify review document accuracy and fix code |
 | `tco-spec:spec-fix-review` | Send review document to another agent for verification and fix |
 | `tco-spec:tmux-send` | Send text content to a tmux pane |
-| `tco-spec:rebase-to-root` | Rebase worktree feature branch back to root via native git |
+| `tco-spec:rebase-to-root` | Rebase worktree feature branch back to root's current branch |
 
 ## Workflow
 

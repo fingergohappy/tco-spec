@@ -1,9 +1,10 @@
 ---
 name: rebase-to-root
 description: |
-  将 worktree 的 feature 分支 rebase 回 root (main) 分支。
+  将 worktree 的 feature 分支 rebase 回 root 仓库的当前分支。
+  root 分支不一定是 main，可能是任意分支（如 dev、release 等）。
   支持在 worktree 中直接调用（自动检测当前分支），也支持在 root 中调用（列出所有 worktree 供选择）。
-  即使用户只是说"rebase"、"合入 main"、"merge 回去"、"rebase 到 root"，
+  即使用户只是说"rebase"、"合回去"、"merge 回去"、"rebase 到 root"，
   都应触发此 skill。
 disable-model-invocation: true
 argument-hint: [feature 名称，留空则自动检测]
@@ -11,7 +12,10 @@ argument-hint: [feature 名称，留空则自动检测]
 
 # rebase-to-root
 
-使用 git 原生命令，将 worktree 的 feature 分支 rebase 回 root (main) 分支。
+使用 git 原生命令，将 worktree 的 feature 分支 rebase 回 root 仓库的当前分支。
+
+> **注意**：root 的当前分支不一定是 main，可能是 dev、release 等任意分支。
+> rebase 的目标始终是 root 所在的分支，不是固定的 main。
 
 ## 前提条件
 
@@ -66,7 +70,7 @@ git -C "<worktree-path>" status --porcelain
 git -C "<project-root>" rebase "<feature-name>"
 ```
 
-此命令将 feature 分支的提交 replay 到 root 分支（通常是 main）上。
+此命令将 feature 分支的提交 replay 到 root 当前分支上。
 
 ### 5. 检查 rebase 结果
 
