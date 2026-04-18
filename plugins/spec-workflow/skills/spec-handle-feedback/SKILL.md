@@ -2,7 +2,7 @@
 name: spec-handle-feedback
 model: opus
 description: |
-  处理来自另一个 AI agent 的执行反馈，审查结果并根据审查结论决定下一步。
+  审查代码完成情况，对照原始设计逐条检查并决定下一步。
   当收到带有 [feedback from ...] 标签的消息时触发。
   当用户说"处理反馈"、"看看反馈"、"检查结果"时触发。
 disable-model-invocation: true
@@ -10,7 +10,7 @@ argument-hint: [反馈消息内容]
 context: fork
 ---
 
-收到另一个 agent 的执行反馈后，审查其工作结果，返回审查结论。
+审查代码完成情况，对照原始设计逐条检查，返回审查结论。
 
 ## 输入
 
