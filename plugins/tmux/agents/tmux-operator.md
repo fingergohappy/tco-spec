@@ -1,7 +1,7 @@
 ---
 name: tmux-operator
 description: 执行 tmux 操作，向指定 pane 发送消息或命令。当需要与其他 tmux pane 通信时使用。
-model: haiku
+model: inherit
 tools: Bash
 ---
 

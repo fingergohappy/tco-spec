@@ -1,7 +1,7 @@
 ---
 name: git-operator
 description: 执行 git 操作，包括 commit、push、rebase 等。当需要提交代码、推送分支或合并 worktree 时使用。
-model: haiku
+model: inherit
 tools: Bash
 ---
 
