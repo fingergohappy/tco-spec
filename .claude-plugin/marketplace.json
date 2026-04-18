@@ -6,26 +6,23 @@
   },
   "metadata": {
     "description": "Personal AI coding toolkit — skills, commands, and subagents",
-    "version": "1.0.0"
+    "version": "2.0.0"
   },
   "plugins": [
     {
-      "name": "ai-kit",
-      "description": "Multi-agent collaboration workflow: feature design, task dispatch, code review, and feedback loop via tmux",
-      "source": "./",
-      "strict": false,
-      "skills": [
-        "./skills/spec-feature",
-        "./skills/spec-change",
-        "./skills/spec-implement",
-        "./skills/spec-review",
-        "./skills/spec-feedback",
-        "./skills/spec-handle-feedback",
-        "./skills/spec-check-review",
-        "./skills/spec-fix-review",
-        "./skills/tmux-send",
-        "./skills/rebase-to-root"
-      ]
+      "name": "spec-workflow",
+      "description": "Spec-driven workflow: design docs, multi-agent collaboration, code review, feedback loop via tmux",
+      "source": "./plugins/spec-workflow"
+    },
+    {
+      "name": "tmux-utils",
+      "description": "Tmux infrastructure utilities for inter-pane communication",
+      "source": "./plugins/tmux-utils"
+    },
+    {
+      "name": "git-utils",
+      "description": "Git worktree and branching utilities",
+      "source": "./plugins/git-utils"
     }
   ]
 }

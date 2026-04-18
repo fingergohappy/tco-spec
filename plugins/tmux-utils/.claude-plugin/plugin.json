@@ -1,0 +1,5 @@
+{
+  "name": "tmux-utils",
+  "description": "Tmux infrastructure utilities for inter-pane communication",
+  "version": "1.0.0"
+}
