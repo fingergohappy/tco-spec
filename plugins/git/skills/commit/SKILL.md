@@ -91,14 +91,14 @@ git diff --cached
 
 允许的类型：
 
-- ✨ `feat` — 新功能
-- 🐛 `fix` — bug 修复
-- 📝 `docs` — 仅文档
-- ♻️ `refactor` — 不改变行为的结构调整
-- ✅ `test` — 仅测试
-- 🔧 `chore` — 工具、配置、依赖、维护
-- ⚡ `perf` — 性能优化
-- 👷 `ci` — CI/CD 变更
+- `✨ feat` — 新功能
+- `🐛 fix` — bug 修复
+- `📝 docs` — 仅文档
+- `♻️ refactor` — 不改变行为的结构调整
+- `✅ test` — 仅测试
+- `🔧 chore` — 工具、配置、依赖、维护
+- `⚡ perf` — 性能优化
+- `👷 ci` — CI/CD 变更
 
 消息规则：
 
