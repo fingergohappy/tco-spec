@@ -1,267 +1,373 @@
-#!/usr/bin/env bash
+#!/bin/bash
+# agent-tmux - Minimal tmux-based service runner for AI agents
+# Usage: agent-tmux <command> --path <path> [-- <cmd...>]
+
 set -euo pipefail
 
 SESSION="agent-dev"
+PROJECT_PATH=""
 
-# 获取项目名和分支名
-get_window_name() {
+# Sanitize a string for use in tmux window names
+sanitize() {
+    local s="$1"
+    # Replace / with _
+    s="${s//\//_}"
+    # Avoid "." because tmux target parsing treats it as a pane separator.
+    s=$(echo "$s" | sed 's/[^A-Za-z0-9_-]/_/g')
+    # Collapse repeated _
+    s=$(echo "$s" | sed 's/_\+/_/g')
+    # Remove leading/trailing _
+    s="${s#_}"
+    s="${s%_}"
+    echo "$s"
+}
+
+# Derive window name from path (project_branch format)
+derive_window_name() {
     local path="$1"
-    local project
-    local branch
+    local repo_name branch_name
 
-    # 获取项目名（目录名）
-    project="${path##*/}"
+    if [[ ! -d "$path" ]]; then
+        echo "Error: path does not exist: $path" >&2
+        exit 1
+    fi
 
-    # 检查是否是 git 仓库
-    if git -C "$path" rev-parse --git-dir >/dev/null 2>&1; then
-        # 获取当前分支名
-        branch=$(git -C "$path" rev-parse --abbrev-ref HEAD)
-        # 替换分支名中的 / 为 -
-        branch="${branch//\//-}"
-        echo "${project}_${branch}"
+    # Check if path is a git repo
+    if git -C "$path" rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+        repo_name=$(basename "$(git -C "$path" rev-parse --show-toplevel)")
+        branch_name=$(git -C "$path" symbolic-ref --quiet --short HEAD 2>/dev/null || echo "detached")
+        repo_name=$(sanitize "$repo_name")
+        branch_name=$(sanitize "$branch_name")
+        echo "${repo_name}_${branch_name}"
     else
-        # 非 git 目录，只使用项目名
-        echo "$project"
+        # Not a git repo, use directory name only
+        repo_name=$(basename "$path")
+        repo_name=$(sanitize "$repo_name")
+        echo "$repo_name"
     fi
 }
 
-# 检查窗口是否存在
+# Ensure session exists
+ensure_session() {
+    if ! tmux has-session -t "$SESSION" 2>/dev/null; then
+        tmux new-session -d -s "$SESSION" -n "__default__"
+    fi
+}
+
+# Check if window exists
 window_exists() {
     local window="$1"
-    tmux display -p "#{:#{==:#{window_name},$window}}" 2>/dev/null
+    tmux list-windows -t "$SESSION" -F "#{window_name}" 2>/dev/null | grep -q "^${window}$"
 }
 
-# 检查窗口前台是否有非 shell 进程
-is_running() {
-    local session_window="$1"
-    local pane_pid
+# Treat shell prompts as idle; any other foreground command means the window is busy.
+is_shell_command() {
+    local cmd="$1"
 
-    pane_pid=$(tmux display -p -t "$session_window" "#{pane_pid}")
-    # 获取前台进程名
-    if ps -p "$pane_pid" -o comm= 2>/dev/null | grep -qvE "^(sh|bash|z|fish|tmux)$"; then
-        return 0
-    else
-        # 检查子进程
-        if pgrep -P "$pane_pid" >/dev/null 2>&1; then
+    case "$cmd" in
+        ""|bash|zsh|sh|fish|dash|ksh|tcsh|csh)
+            return 0
+            ;;
+        *)
+            return 1
+            ;;
+    esac
+}
+
+window_has_running_program() {
+    local window="$1"
+    local pane_dead pane_cmd
+
+    while IFS='|' read -r pane_dead pane_cmd; do
+        if [[ "$pane_dead" == "0" ]] && ! is_shell_command "$pane_cmd"; then
             return 0
         fi
-    fi
+    done < <(tmux list-panes -t "${SESSION}:${window}" -F '#{pane_dead}|#{pane_current_command}' 2>/dev/null)
+
     return 1
 }
 
-# 确保 session 存在
-ensure_session() {
-    if ! tmux has-session -t "$SESSION" 2>/dev/null; then
-        tmux new-session -d -s "$SESSION"
-    fi
+wait_for_window_idle() {
+    local window="$1"
+    local attempts="${2:-50}"
+    local i
+
+    for ((i = 0; i < attempts; i++)); do
+        if ! window_has_running_program "$window"; then
+            return 0
+        fi
+        sleep 0.1
+    done
+
+    return 1
 }
 
-# 启动命令
+# Start or ensure a service is running
 cmd_start() {
-    local path="$1"
-    shift
-    local cmd=("$@")
+    local cmd=""
+
+    # Parse --path
+    while [[ $# -gt 0 ]]; do
+        case "$1" in
+            --path)
+                PROJECT_PATH="$2"
+                shift 2
+                ;;
+            --)
+                shift
+                cmd="$*"
+                break
+                ;;
+            *)
+                shift
+                ;;
+        esac
+    done
+
+    [[ -n "$PROJECT_PATH" ]] || { echo "Error: --path required" >&2; exit 1; }
+    [[ -n "$cmd" ]] || { echo "Error: command required after --" >&2; exit 1; }
+
     local window
-
-    if [[ ${#cmd[@]} -eq 0 ]]; then
-        echo "Usage: $0 start --path <path> -- <command...>" >&2
-        exit 1
-    fi
-
-    cd "$path"
-    window=$(get_window_name "$path")
-    local session_window="$SESSION:$window"
+    window=$(derive_window_name "$PROJECT_PATH")
 
     ensure_session
 
     if window_exists "$window"; then
-        if is_running "$session_window"; then
-            echo "existing $session_window"
-            exit 0
-        else
-            # window 存在但只有 shell，直接启动
-            tmux send-keys -t "$session_window" "${cmd[*]}" Enter
-            echo "started $session_window"
-            exit 0
+        if window_has_running_program "$window"; then
+            echo "Already running: ${SESSION}:${window} (RUNNING)"
+            return 0
         fi
+
+        tmux send-keys -t "${SESSION}:${window}" "$cmd" Enter
+        echo "Started: ${SESSION}:${window}"
+        return 0
     fi
 
-    # 创建新窗口
-    tmux new-window -t "$SESSION" -n "$window" -c "$path"
-    tmux send-keys -t "$session_window" "${cmd[*]}" Enter
-    echo "created $session_window"
+    tmux new-window -d -t "$SESSION" -n "$window" -c "$PROJECT_PATH"
+    tmux send-keys -t "${SESSION}:${window}" "$cmd" Enter
+    echo "Started: ${SESSION}:${window}"
 }
 
-# 重启命令
+# Restart a service (force fresh process)
 cmd_restart() {
-    local path="$1"
-    shift
-    local cmd=("$@")
+    local cmd=""
 
-    if [[ ${#cmd[@]} -eq 0 ]]; then
-        echo "Usage: $0 restart --path <path> -- <command...>" >&2
-        exit 1
-    fi
+    while [[ $# -gt 0 ]]; do
+        case "$1" in
+            --path)
+                PROJECT_PATH="$2"
+                shift 2
+                ;;
+            --)
+                shift
+                cmd="$*"
+                break
+                ;;
+            *)
+                shift
+                ;;
+        esac
+    done
 
-    cd "$path"
+    [[ -n "$PROJECT_PATH" ]] || { echo "Error: --path required" >&2; exit 1; }
+    [[ -n "$cmd" ]] || { echo "Error: command required after --" >&2; exit 1; }
+
     local window
-    window=$(get_window_name "$path")
-    local session_window="$SESSION:$window"
+    window=$(derive_window_name "$PROJECT_PATH")
 
     ensure_session
 
+    if window_exists "$window"; then
+        if window_has_running_program "$window"; then
+            tmux send-keys -t "${SESSION}:${window}" C-c
+            wait_for_window_idle "$window" || {
+                echo "Error: existing command did not stop: ${SESSION}:${window}" >&2
+                exit 1
+            }
+        fi
+
+        tmux send-keys -t "${SESSION}:${window}" "$cmd" Enter
+        echo "Restarted: ${SESSION}:${window}"
+        return 0
+    fi
+
+    tmux new-window -d -t "$SESSION" -n "$window" -c "$PROJECT_PATH"
+    tmux send-keys -t "${SESSION}:${window}" "$cmd" Enter
+    echo "Started: ${SESSION}:${window}"
+}
+
+# Stop a service
+cmd_stop() {
+    # Parse --path
+    while [[ $# -gt 0 ]]; do
+        case "$1" in
+            --path)
+                PROJECT_PATH="$2"
+                shift 2
+                ;;
+            *)
+                shift
+                ;;
+        esac
+    done
+
+    [[ -n "$PROJECT_PATH" ]] || { echo "Error: --path required" >&2; exit 1; }
+
+    local window
+    window=$(derive_window_name "$PROJECT_PATH")
+
     if ! window_exists "$window"; then
-        # 不存在，按 start 处理
-        cmd_start "$path" "${cmd[@]}"
+        echo "Service not found: ${SESSION}:${window}" >&2
+        exit 1
+    fi
+
+    tmux send-keys -t "${SESSION}:${window}" C-c
+    echo "Stopped: ${SESSION}:${window}"
+}
+
+# Check if window exists for path (returns 0 if exists, 1 if not)
+cmd_exists() {
+    # Parse --path
+    while [[ $# -gt 0 ]]; do
+        case "$1" in
+            --path)
+                PROJECT_PATH="$2"
+                shift 2
+                ;;
+            *)
+                shift
+                ;;
+        esac
+    done
+
+    [[ -n "$PROJECT_PATH" ]] || { echo "Error: --path required" >&2; exit 1; }
+
+    local window
+    window=$(derive_window_name "$PROJECT_PATH")
+
+    if ! tmux has-session -t "$SESSION" 2>/dev/null; then
+        exit 1
+    fi
+
+    window_exists "$window"
+}
+
+# Get window name for path
+cmd_window() {
+    # Parse --path
+    while [[ $# -gt 0 ]]; do
+        case "$1" in
+            --path)
+                PROJECT_PATH="$2"
+                shift 2
+                ;;
+            *)
+                shift
+                ;;
+        esac
+    done
+
+    [[ -n "$PROJECT_PATH" ]] || { echo "Error: --path required" >&2; exit 1; }
+
+    derive_window_name "$PROJECT_PATH"
+}
+
+# Show status
+cmd_status() {
+    # Parse --path
+    while [[ $# -gt 0 ]]; do
+        case "$1" in
+            --path)
+                PROJECT_PATH="$2"
+                shift 2
+                ;;
+            *)
+                shift
+                ;;
+        esac
+    done
+
+    [[ -n "$PROJECT_PATH" ]] || { echo "Error: --path required" >&2; exit 1; }
+
+    local window
+    window=$(derive_window_name "$PROJECT_PATH")
+
+    echo "Session: $SESSION"
+    if ! tmux has-session -t "$SESSION" 2>/dev/null; then
+        echo "  Status: NOT RUNNING"
+        return
+    fi
+    echo "  Status: RUNNING"
+
+    if ! window_exists "$window"; then
+        echo "  Window: ${window} - NOT FOUND"
         return
     fi
 
-    # 发送 C-c 中断当前进程
-    tmux send-keys -t "$session_window" C-c
-    sleep 0.1
-    # 发送新命令
-    tmux send-keys -t "$session_window" "${cmd[*]}" Enter
-    echo "restarted $session_window"
-}
-
-# 停止命令
-cmd_stop() {
-    local path="$1"
-    local window
-    window=$(get_window_name "$path")
-    local session_window="$SESSION:$window"
-
-    if ! window_exists "$window"; then
-        echo "Window $session_window does not exist" >&2
-        exit 1
+    if window_has_running_program "$window"; then
+        echo "  Window: ${window} - RUNNING"
+        return
     fi
 
-    tmux send-keys -t "$session_window" C-c
-    echo "stopped $session_window"
+    echo "  Window: ${window} - IDLE"
 }
 
-# 状态命令
-cmd_status() {
-    local path="$1"
-    local window
-    window=$(get_window_name "$path")
-    local session_window="$SESSION:$window"
+# Show usage
+cmd_usage() {
+    cat <<'EOF'
+Usage: agent-tmux <command> --path <path> [-- <cmd...>]
 
-    if ! window_exists "$window"; then
-        echo "NONE"
-        exit 1
-    fi
+Commands:
+  start --path <path> -- <command...>   Start if idle, or report existing running service
+  restart --path <path> -- <command...> Force restart a service
+  stop --path <path>                    Stop a service (send C-c)
+  status --path <path>                  Show status (RUNNING/IDLE)
+  exists --path <path>                  Check if window exists (exit code 0/1)
+  window --path <path>                  Print window name for path
 
-    if is_running "$session_window"; then
-        echo "RUNNING"
-    else
-        echo "IDLE"
-    fi
+Session:
+  Shared tmux session: agent-dev
+  Window: <project>_<branch> (derived from path's git info)
+
+Examples:
+  agent-tmux start --path ~/myproject -- python -m http.server 8000
+  agent-tmux exists --path ~/myproject && echo "running"
+  agent-tmux window --path ~/myproject
+EOF
 }
 
-# 检查是否存在
-cmd_exists() {
-    local path="$1"
-    local window
-    window=$(get_window_name "$path")
-
-    if window_exists "$window"; then
-        exit 0
-    else
-        exit 1
-    fi
-}
-
-# 获取窗口名
-cmd_window() {
-    local path="$1"
-    get_window_name "$path"
-}
-
-# 解析参数
-PATH=""
-CMD=()
-
-while [[ $# -gt 0 ]]; do
-    case "$1" in
-        --path)
-            PATH="$2"
-            shift 2
-            ;;
-        --)
-            shift
-            CMD=("$@")
-            break
-            ;;
-        *)
-            if [[ -z "${COMMAND:-}" ]]; then
-                COMMAND="$1"
-            else
-                echo "Unknown argument: $1" >&2
-                exit 1
-            fi
-            shift
-            ;;
-    esac
-done
-
-if [[ -z "${COMMAND:-}" ]]; then
-    echo "Usage: $0 <command> [--path <path>] [--] [<command...>]" >&2
-    echo "" >&2
-    echo "Commands:" >&2
-    echo "  start    Start a service in tmux" >&2
-    echo "  restart  Restart a service in tmux" >&2
-    echo "  stop     Stop a service in tmux" >&2
-    echo "  status   Check service status" >&2
-    echo "  exists   Check if window exists (exit code)" >&2
-    echo "  window   Get window name" >&2
-    exit 1
-fi
-
-if [[ "$COMMAND" == "help" ]]; then
-    echo "Usage: $0 <command> [--path <path>] [--] [<command...>]" >&2
-    echo "" >&2
-    echo "Commands:" >&2
-    echo "  start    Start a service in tmux" >&2
-    echo "  restart  Restart a service in tmux" >&2
-    echo "  stop     Stop a service in tmux" >&2
-    echo "  status   Check service status" >&2
-    echo "  exists   Check if window exists (exit code)" >&2
-    echo "  window   Get window name" >&2
-    echo "" >&2
-    echo "Examples:" >&2
-    echo "  $0 start --path ~/project -- npm run dev" >&2
-    echo "  $0 status --path ~/project" >&2
-    echo "  $0 window --path ~/project" >&2
-    exit 0
-fi
-
-if [[ -z "$PATH" ]]; then
-    echo "Error: --path is required" >&2
-    exit 1
-fi
-
-case "$COMMAND" in
+# Main dispatch
+case "${1:-}" in
     start)
-        cmd_start "$PATH" "${CMD[@]}"
+        shift
+        cmd_start "$@"
         ;;
     restart)
-        cmd_restart "$PATH" "${CMD[@]}"
+        shift
+        cmd_restart "$@"
         ;;
     stop)
-        cmd_stop "$PATH"
+        shift
+        cmd_stop "$@"
         ;;
     status)
-        cmd_status "$PATH"
+        shift
+        cmd_status "$@"
         ;;
     exists)
-        cmd_exists "$PATH"
+        shift
+        cmd_exists "$@"
         ;;
     window)
-        cmd_window "$PATH"
+        shift
+        cmd_window "$@"
+        ;;
+    help|--help|-h|"")
+        cmd_usage
         ;;
     *)
-        echo "Unknown command: $COMMAND" >&2
+        echo "Unknown command: $1" >&2
+        cmd_usage
         exit 1
         ;;
 esac
