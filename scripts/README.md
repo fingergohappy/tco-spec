@@ -40,9 +40,15 @@ python3 scripts/convert_claude_agents_to_codex.py \
 Installs generated Codex custom agents into `~/.codex/agents/` by calling the
 converter script with the repository defaults.
 
+It also creates symlinks for plugin skills under `~/.agents/skills/` by default,
+so `list skills` and `$spec-feature`-style invocation work even when the plugin
+directory UI has not been used to install the plugin yet.
+
 Examples:
 
 ```bash
 bash scripts/install_codex_agents.sh
 bash scripts/install_codex_agents.sh --target ~/.codex/agents --no-model-map
+bash scripts/install_codex_agents.sh --skills-target ~/.agents/skills
+bash scripts/install_codex_agents.sh --no-skill-links
 ```

@@ -4,23 +4,28 @@ set -euo pipefail
 SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd -- "${SCRIPT_DIR}/.." && pwd)"
 TARGET_DIR="${HOME}/.codex/agents"
+SKILLS_TARGET_DIR="${HOME}/.agents/skills"
 MAP_CLAUDE_MODELS=1
 FORCE=1
+INSTALL_SKILL_LINKS=1
 
 usage() {
   cat <<'EOF'
 Usage:
-  bash scripts/install_codex_agents.sh [--target DIR] [--no-model-map] [--no-force]
+  bash scripts/install_codex_agents.sh [--target DIR] [--skills-target DIR] [--no-model-map] [--no-force] [--no-skill-links]
 
 Description:
   Convert Claude-style plugin agents in this repository into Codex custom agent TOML
-  files and install them into the target agent directory.
+  files and install them into the target agent directory. By default, also expose
+  plugin skills to Codex by creating symlinks under ~/.agents/skills.
 
 Options:
-  --target DIR     Install to DIR instead of ~/.codex/agents
-  --no-model-map   Do not map Claude model aliases like haiku/opus to OpenAI models
-  --no-force       Do not overwrite existing TOML files
-  -h, --help       Show this help
+  --target DIR          Install agents to DIR instead of ~/.codex/agents
+  --skills-target DIR   Install skill symlinks to DIR instead of ~/.agents/skills
+  --no-model-map        Do not map Claude model aliases like haiku/opus to OpenAI models
+  --no-force            Do not overwrite existing TOML files
+  --no-skill-links      Skip installing plugin skill symlinks
+  -h, --help            Show this help
 EOF
 }
 
@@ -30,12 +35,20 @@ while [[ $# -gt 0 ]]; do
       TARGET_DIR="$2"
       shift 2
       ;;
+    --skills-target)
+      SKILLS_TARGET_DIR="$2"
+      shift 2
+      ;;
     --no-model-map)
       MAP_CLAUDE_MODELS=0
       shift
       ;;
     --no-force)
       FORCE=0
+      shift
+      ;;
+    --no-skill-links)
+      INSTALL_SKILL_LINKS=0
       shift
       ;;
     -h|--help)
@@ -63,3 +76,27 @@ if [[ "${FORCE}" -eq 1 ]]; then
 fi
 
 python3 "${REPO_ROOT}/scripts/convert_claude_agents_to_codex.py" "${ARGS[@]}"
+
+if [[ "${INSTALL_SKILL_LINKS}" -eq 1 ]]; then
+  mkdir -p "${SKILLS_TARGET_DIR}"
+
+  linked=0
+  for skills_root in "${REPO_ROOT}"/plugins/*/codex-skills; do
+    if [[ ! -d "${skills_root}" ]]; then
+      continue
+    fi
+
+    for skill_dir in "${skills_root}"/*; do
+      if [[ ! -d "${skill_dir}" ]]; then
+        continue
+      fi
+
+      skill_name="$(basename -- "${skill_dir}")"
+      ln -sfn "${skill_dir}" "${SKILLS_TARGET_DIR}/${skill_name}"
+      echo "linked:${SKILLS_TARGET_DIR}/${skill_name}"
+      linked=$((linked + 1))
+    done
+  done
+
+  echo "skills_linked:${linked}"
+fi
