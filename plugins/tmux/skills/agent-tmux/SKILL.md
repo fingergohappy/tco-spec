@@ -32,29 +32,6 @@ context: fork
    - `exists`: 检查窗口是否存在（exit code）
    - `window`: 获取窗口名
 
-## 快速示例
-
-```bash
-# 启动服务
-./plugins/tmux/skills/agent-tmux/scripts/agent-tmux start --path ~/myproject -- npm run dev
-
-# 重启服务
-./plugins/tmux/skills/agent-tmux/scripts/agent-tmux restart --path ~/myproject -- python -m http.server 8000
-
-# 检查状态
-./plugins/tmux/skills/agent-tmux/scripts/agent-tmux status --path ~/myproject
-# 输出: RUNNING 或 IDLE
-
-# 检查是否存在（用于脚本判断）
-if ./plugins/tmux/skills/agent-tmux/scripts/agent-tmux exists --path ~/myproject; then
-    echo "服务已运行"
-fi
-
-# 获取窗口名
-WINDOW=$(./plugins/tmux/skills/agent-tmux/scripts/agent-tmux window --path ~/myproject)
-tmux capture-pane -t agent-dev:$WINDOW -p
-```
-
 ## 启动逻辑
 
 ```
