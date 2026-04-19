@@ -20,7 +20,10 @@ context: fork
 ## Workflow
 
 1. 解析用户意图，确定操作：`start` / `restart` / `stop` / `status`
-2. 根据 `path` 获取 window 名：git 仓库取 `<项目名>_<分支名>`，非 git 目录取目录名
+2. 根据 `path` 获取 window 名：
+   - 判断是否 git 目录：`git -C "$path" rev-parse --is-inside-work-tree`
+   - 是 git 目录：项目名 = `basename "$(git -C "$path" rev-parse --show-toplevel)"`，分支名 = `git -C "$path" symbolic-ref --quiet --short HEAD`，window = `${项目名}_${分支名}`
+   - 非 git 目录：window = `basename "$path"`
 3. 调用脚本执行，所有判断逻辑由脚本内部处理
 4. 报告脚本输出结果给用户
 
