@@ -27,13 +27,3 @@ context: fork
 
 - 不要包装成 `sh -lc ...` 或 `bash -lc ...`
 - 直接把原始命令放在 `--` 后面
-
-## 查看输出
-
-```bash
-# 获取窗口名
-WINDOW=$(./plugins/tmux/skills/agent-tmux/scripts/agent-tmux window --path ~/myproject)
-
-# 查看窗口输出
-tmux capture-pane -t agent-dev:$WINDOW -p
-```
