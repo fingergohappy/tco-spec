@@ -18,7 +18,7 @@ context: fork
 - **窗口命名**: `<项目名>_<分支名>`（从 git 信息派生）
 - **会话**: 固定使用 `agent-dev` session
 - **幂等性**: 已运行的服务不会重复启动
-- **优先使用**: `scripts/agent-tmux` 脚本，不要假设全局命令存在
+- **脚本位置**: `plugins/tmux/skills/agent-tmux/scripts/agent-tmux`
 
 ## Workflow
 
@@ -36,22 +36,22 @@ context: fork
 
 ```bash
 # 启动服务
-scripts/agent-tmux start --path ~/myproject -- npm run dev
+bash plugins/tmux/skills/agent-tmux/scripts/agent-tmux start --path ~/myproject -- npm run dev
 
 # 重启服务
-scripts/agent-tmux restart --path ~/myproject -- python -m http.server 8000
+bash plugins/tmux/skills/agent-tmux/scripts/agent-tmux restart --path ~/myproject -- python -m http.server 8000
 
 # 检查状态
-scripts/agent-tmux status --path ~/myproject
+bash plugins/tmux/skills/agent-tmux/scripts/agent-tmux status --path ~/myproject
 # 输出: RUNNING 或 IDLE
 
 # 检查是否存在（用于脚本判断）
-if scripts/agent-tmux exists --path ~/myproject; then
+if bash plugins/tmux/skills/agent-tmux/scripts/agent-tmux exists --path ~/myproject; then
     echo "服务已运行"
 fi
 
 # 获取窗口名
-WINDOW=$(scripts/agent-tmux window --path ~/myproject)
+WINDOW=$(bash plugins/tmux/skills/agent-tmux/scripts/agent-tmux window --path ~/myproject)
 tmux capture-pane -t agent-dev:$WINDOW -p
 ```
 
@@ -73,7 +73,7 @@ tmux capture-pane -t agent-dev:$WINDOW -p
 - 直接把原始命令放在 `--` 后面
 - 需要重定向、管道时直接传原始命令：
   ```bash
-  scripts/agent-tmux start --path ~/project -- atlas-run --http-port 2991 2>&1 | tee -a ./atlas-run.log
+  bash plugins/tmux/skills/agent-tmux/scripts/agent-tmux start --path ~/project -- atlas-run --http-port 2991 2>&1 | tee -a ./atlas-run.log
   ```
 
 ## 命名规则
