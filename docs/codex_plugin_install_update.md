@@ -198,6 +198,7 @@ bash scripts/install_codex_agents.sh
 2. 先用 `list skills` 确认 `spec-feature` 等 skill 已刷新
 3. 如果插件内容还是旧的，禁用并重新启用对应插件
 4. 如果还不生效，卸载后重新安装对应插件
+5. 如果 `readlink ~/.agents/skills/spec-feature` 仍指向 `.../codex-skills/...`，再执行一次 `bash scripts/install_codex_agents.sh` 刷新 skill 链接目标
 
 ## 验证
 
@@ -208,11 +209,17 @@ test -f ~/.agents/plugins/marketplace.json
 test -f ~/.codex/plugins/spec-workflow/.codex-plugin/plugin.json
 test -f ~/.codex/plugins/tmux/.codex-plugin/plugin.json
 test -f ~/.codex/plugins/git/.codex-plugin/plugin.json
+grep -q '"skills": "./skills/"' ~/.codex/plugins/spec-workflow/.codex-plugin/plugin.json
+grep -q '"skills": "./skills/"' ~/.codex/plugins/tmux/.codex-plugin/plugin.json
+grep -q '"skills": "./skills/"' ~/.codex/plugins/git/.codex-plugin/plugin.json
+test -d ~/.codex/plugins/spec-workflow/skills
+test -d ~/.codex/plugins/tmux/skills
+test -d ~/.codex/plugins/git/skills
 test -f ~/.codex/agents/git-operator.toml
 test -f ~/.codex/agents/tmux-operator.toml
-test -L ~/.agents/skills/spec-feature
-test -L ~/.agents/skills/tmux-send
-test -L ~/.agents/skills/commit
+test -d ~/.agents/skills/spec-feature
+test -d ~/.agents/skills/tmux-send
+test -d ~/.agents/skills/commit
 ```
 
 安装完成后：
