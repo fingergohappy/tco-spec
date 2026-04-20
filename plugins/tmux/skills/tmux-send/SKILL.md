@@ -1,7 +1,9 @@
 ---
 name: tmux-send
 model: haiku
-description: Send text content to a tmux pane using tmux send-keys, with automatic Enter. Use this skill whenever the user wants to send commands, code, or any text to a tmux pane, terminal panel, or another terminal window. Triggers on phrases like "send to tmux", "run in that pane", "execute in tmux", "send this to terminal", "paste to pane".
+description: |
+  Send text content to a tmux pane using tmux send-keys, with automatic Enter.
+  Triggers on phrases like "send to tmux", "run in that pane", "execute in tmux", "send this to terminal", "paste to pane".
 argument-hint: [<pane_id>] [<content>]
 ---
 
