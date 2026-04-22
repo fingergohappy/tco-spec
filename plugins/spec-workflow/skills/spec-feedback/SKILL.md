@@ -1,33 +1,35 @@
 ---
 name: spec-feedback
 model: haiku
-description: 任务完成后向发起方反馈执行结果
-argument-hint: [目标pane_id]
+description: |
+  任务执行完成后向发起方 pane 反馈执行结果。
+  只要任务完成、收到 [task from ...] 标签、或用户说「反馈结果」、「告诉对方完成了」，就应该使用此 skill。
+argument-hint: "[<target_pane_id>]"
 context: fork
 ---
 
+# spec-feedback
+
 任务完成后，向发起方的 tmux pane 反馈执行结果。
 
-## 输入
+## 工作流程
 
-目标 pane ID: $ARGUMENTS
-
-## 执行步骤
-
-1. 获取当前 pane ID:
+1. 获取 this_pane_id：
    ```bash
    echo $TMUX_PANE
    ```
-2. 从收到的 `[task from ...]` 标签中提取目标 pane_id（或使用 $ARGUMENTS 传入的 pane_id）
-3. 生成反馈消息
-4. 通过 tmux-send skill 发送到目标 pane
+2. 确定 target_pane_id：
+   - 优先从收到的 `[task from ..., pane_id: xxx]` 标签中提取
+   - 其次使用 `$ARGUMENTS` 传入的值
+   - 仍未知则询问用户
+3. 生成反馈消息，通过 tmux-send skill 发送到 target_pane_id
 
 ## 反馈格式
 
-根据收到的原始任务消息类型附上设计上下文：
+根据原始任务类型附上设计上下文：
 
-- **如果对方发送的是文档路径** → 引用路径
-- **如果对方发送的是内联内容** → 原样附上
+- **文档路径** → 引用路径
+- **内联内容** → 原样附上
 
 ```
 ## 原始设计
@@ -56,15 +58,11 @@ context: fork
 
 使用 spec-handle-feedback skill 检查以上反馈。
 
-[feedback from {当前AI工具名称}, pane_id: {当前pane_id}: {执行结果简要描述}]
+[feedback from {当前AI工具名称}, pane_id: {this_pane_id}: {执行结果简要描述}]
 ```
 
 ## 生成规则
 
 - 完成情况必须量化
 - 跳过的任务必须注明原因
-- 如果全部顺利完成，跳过"跳过项说明"和"遗留问题"部分
-
-## 发送方式
-
-使用 tmux-send skill 发送。
+- 全部顺利完成时，省略「跳过项说明」和「遗留问题」部分

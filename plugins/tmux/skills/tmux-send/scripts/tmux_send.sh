@@ -7,6 +7,7 @@
 set -euo pipefail
 
 PANE_ID="${1:?Usage: tmux_send.sh <pane_id> <content_or_file>}"
+[[ "$PANE_ID" != %* ]] && PANE_ID="%${PANE_ID}"
 CONTENT="${2:?Usage: tmux_send.sh <pane_id> <content_or_file>}"
 
 # Verify pane exists

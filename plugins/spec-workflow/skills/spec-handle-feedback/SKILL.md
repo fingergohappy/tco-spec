@@ -4,29 +4,26 @@ model: opus
 description: |
   审查代码完成情况，对照原始设计逐条检查并决定下一步。
   当收到带有 [feedback from ...] 标签的消息时触发。
-  当用户说"处理反馈"、"看看反馈"、"检查结果"时触发。
-argument-hint: [反馈消息内容]
+  当用户说「处理反馈」、「看看反馈」、「检查结果」时触发。
+argument-hint: "[<反馈消息内容>]"
 context: fork
 ---
 
-审查代码完成情况，对照原始设计逐条检查，返回审查结论。
+# spec-handle-feedback
 
-## 输入
+审查代码完成情况，对照原始设计逐条检查，返回审查结论。如果发现问题，通过 tmux-send skill 将反馈发回来源 pane。
 
-$ARGUMENTS
+## 工作流程
 
-## 执行步骤
-
-1. 从反馈消息末尾的 `[feedback from ...]` 标签中提取来源 pane_id
+1. 从反馈消息末尾的 `[feedback from ..., pane_id: xxx]` 标签中提取 source_pane_id
 2. 从反馈消息中的「原始设计」部分找回原始任务
 3. 按以下顺序逐层审查：
    - **第一层：实现完整性** — 逐条对照原始设计，检查每一项任务是否都已实现
    - **第二层：逻辑与缺陷** — 检查代码逻辑、边界条件、bug 和安全隐患
    - **第三层：代码风格** — 检查命名规范、代码组织、接口设计
-4. 根据审查结果，更新文档状态：
+4. 根据审查结果：
    - 全部通过 → 文档 status 改为 `done`
-   - 需要修复 → 文档 status 保持 `doing`
-5. 返回审查结论
+   - 发现问题 → 文档 status 保持 `doing`，通过 tmux-send skill 将问题列表发回 source_pane_id
 
 ## 审查要求
 
@@ -54,7 +51,7 @@ $ARGUMENTS
 
 ### 建议
 
-{如果需要修复，给出修复任务清单，主对话可以用 spec-implement skill 发起下一轮}
+{如果需要修复，给出修复任务清单，可以用 spec-implement skill 发起下一轮}
 ```
 
 ## 终止条件
