@@ -21,7 +21,7 @@ argument-hint: "[<pane_id>] [<内容>]"
 
 ## 发送内容
 
-使用脚本 `scripts/tmux_send.sh` 发送内容：
+**必须且只能**通过脚本 `scripts/tmux_send.sh` 发送内容。严禁直接调用 `tmux send-keys` 或任何其他 tmux 命令——无论内容多简单，都不允许绕过脚本。这样做是为了保证行为一致、避免转义问题，以及便于统一维护。
 
 ```bash
 # 方式 1：直接传内容

@@ -29,6 +29,6 @@ fi
 
 # Paste content to pane (must be separate from send-keys)
 tmux paste-buffer -p -r -t "$PANE_ID"
-
+sleep 0.5
 # Send Enter key as a separate command to ensure TUI tools can receive it
 tmux send-keys -t "$PANE_ID" Enter
