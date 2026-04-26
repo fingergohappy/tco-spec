@@ -2,7 +2,6 @@
 name: review-full
 description: |
   全量代码审查。启动子代理并行调用所有 review skills 扫描整个项目，汇总结果。审查角度：shell 脚本质量、架构、skill 规范。
-  Full project code review. Launches sub-agents in parallel calling all review skills to scan the entire project, then aggregates results. Reviews from shell quality, architecture, and skill specification perspectives.
 when_to_use: |
   当用户说「全量审查」「review all」「review full」「全面检查」「审查整个项目」时触发。
 argument-hint: "[<目录路径>]"

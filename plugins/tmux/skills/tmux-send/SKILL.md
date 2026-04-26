@@ -3,11 +3,8 @@ name: tmux-send
 model: haiku
 description: |
   Send content to a specified tmux pane and auto-execute. This is the foundational skill for cross-pane communication—use it whenever you need to "throw" content to another pane.
-  将内容发送到指定的 tmux pane 并自动执行。这是跨 pane 通信的基础 skill——任何需要把内容"丢给"另一个 pane 的场景都应该使用它。
-  When the user says phrases that only specify a numeric target (e.g. "发给 7", "发到 %3", "给那边发一下", "send to 7"), content is extracted from conversation context automatically without follow-up questions.
-  当用户说「发给 7」「发到 %3」「给那边发一下」这类只指定了数字目标的短语时，内容从对话上下文中自动提取，无需追问。
-  Also triggers on: "发送到 tmux", "在那个面板运行", "send to pane", "run in tmux", "paste to terminal", or any phrase expressing intent to send content/commands/code to a pane.
-  也包括：「发送到 tmux」「在那个面板运行」「send to pane」「run in tmux」「paste to terminal」，以及任何表达"把内容/命令/代码发到某个 pane"意图的话。
+  When the user says phrases that only specify a numeric target (e.g. "send to 7"), content is extracted from conversation context automatically without follow-up questions.
+  Also triggers on: "send to pane", "run in tmux", "paste to terminal", or any phrase expressing intent to send content/commands/code to a pane.
 argument-hint: "[<pane_id>] [<内容>]"
 disable-model-invocation: false
 ---

@@ -2,11 +2,8 @@
 name: dispatch
 model: haiku
 description: |
-  将设计文档或任务内容派发到指定 tmux pane 执行。
   Dispatch design documents or task content to a specified tmux pane for execution.
-  派发前会指示接收端先调用 gate-evaluate 评估，再执行。
   The receiver is instructed to call gate-evaluate for assessment before execution.
-  当用户说「发过去」「send 过去」「开始干」「dispatch」「让{number}去做」「让{number}来」...时触发。
   Triggers when user says "send it over", "dispatch", "let {number} do it", "have {number} handle it", etc.
 argument-hint: "[loop] [<target_pane_id>] [<文档路径或内联任务>]"
 context: fork

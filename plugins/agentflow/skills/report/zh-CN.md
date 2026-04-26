@@ -2,7 +2,6 @@
 name: report
 description: |
   任务完成后向派发端 tmux 面板汇报执行结果。通过脚本生成格式化报告消息，经 tmux-send skill 发送。
-  Report task execution results back to the dispatching tmux pane after task completion. Generates formatted report messages via script and sends through tmux-send skill.
 when_to_use: |
   当用户说「汇报结果」「告诉对方完成了」「report」时触发。任务完成、收到 [task from ...] 或 [fix from ...] 标签时也应使用此 skill。
 argument-hint: "[<target_pane_id>]"

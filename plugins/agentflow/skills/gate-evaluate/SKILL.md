@@ -2,11 +2,6 @@
 name: gate-evaluate
 model: opus
 description: |
-  接收端的入口守卫。每次收到发起端发来的内容（任务、修复指令等），
-  执行前先评估合理性。评估通过才执行，不合理则跳过或拒绝。
-  当收到带有 [task from ...] 或 [fix from ...] 标签的消息时，
-  应在执行前先触发此 skill。
-  当用户说「评估下」、「看看合不合理」、「evaluate」时也应触发。
   Entry gate for the receiving end. Evaluates incoming content (tasks, fix
   instructions, etc.) for reasonableness before execution. Only executes if
   the evaluation passes; skips or rejects otherwise. Should be triggered

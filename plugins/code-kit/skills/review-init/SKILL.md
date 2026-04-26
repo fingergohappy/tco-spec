@@ -1,9 +1,6 @@
 ---
 name: review-init
 description: |
-  分析当前项目的技术栈、依赖和代码结构，生成定制化的 code review skills。
-  当用户说「生成 review」、「初始化 review」、「review init」、「生成代码审查」时触发。
-  如果项目已有 review skills，走合并逻辑：展示已有 + 新建议，让用户决定增删。
   Analyze the current project's tech stack, dependencies, and code structure to generate customized code review skills.
   Triggered when the user says "generate review", "initialize review", "review init", or "generate code review".
   If the project already has review skills, use merge logic: show existing + new suggestions, and let the user decide what to add or remove.

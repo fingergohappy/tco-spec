@@ -2,7 +2,6 @@
 name: review-shell
 description: |
   从 shell 脚本质量角度审查代码。检查变量引用、错误处理、可移植性、临时文件清理等 shell 编程规范。接收文件列表作为输入，只审查 .sh 文件。
-  Review code from a shell script quality perspective. Checks variable quoting, error handling, portability, temp file cleanup, and shell scripting best practices. Accepts file list as input, only reviews .sh files.
 when_to_use: |
   当用户说「shell 审查」「shell 脚本质量」「review shell」「检查 shell 脚本」时触发。
 argument-hint: "[<文件路径或目录>]"

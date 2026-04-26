@@ -1,11 +1,6 @@
 ---
 name: rebase-to-root
 description: |
-  将 worktree 的 feature 分支 rebase 回 root 仓库的当前分支。
-  root 分支不一定是 main，可能是任意分支（如 dev、release 等）。
-  支持在 worktree 中直接调用（自动检测当前分支），也支持在 root 中调用（列出所有 worktree 供选择）。
-  即使用户只是说"rebase"、"合回去"、"merge 回去"、"rebase 到 root"，
-  都应触发此 skill。
   Rebase a worktree's feature branch onto the root repository's current branch.
   The root branch is not necessarily main — it can be any branch (e.g. dev, release, etc.).
   Supports invocation from within a worktree (auto-detects current branch) or from the root (lists all worktrees for selection).

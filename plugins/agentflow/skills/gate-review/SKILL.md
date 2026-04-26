@@ -2,13 +2,8 @@
 name: gate-review
 model: opus
 description: |
-  发起端的出口守卫。审查接收端的工作成果是否达标，对照设计文档检查实现。
-  收到带有 [report from ...] 标签的消息时触发。
-  当用户说「审查下」、「review」、「看看做得怎么样」、「检查结果」时触发。
-  也可用于本地代码自检：代码写完后对照设计文档审查。
   Exit gate for the dispatching side. Reviews whether the receiving side's deliverables meet the standard, checking implementation against design documents.
   Triggered when a message with a [report from ...] tag is received.
-  Triggered when the user says "审查下", "review", "看看做得怎么样", or "检查结果".
   Also usable for local code self-review: review code against design documents after implementation.
 argument-hint: "[<report content or design document path>]"
 context: fork

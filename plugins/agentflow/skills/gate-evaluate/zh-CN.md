@@ -2,7 +2,6 @@
 name: gate-evaluate
 description: |
   接收端入口守卫。执行前评估传入任务或修复指令的合理性，评估通过才执行，不合理则拒绝或跳过。
-  Entry guard for the receiving end. Evaluates the reasonableness of incoming tasks or fix instructions before execution. Only executes if the evaluation passes; rejects or skips unreasonable items.
 when_to_use: |
   当用户说「评估下」「看看合不合理」「evaluate」时触发。当收到带有 [task from ...] 或 [fix from ...] 标签的消息时，应在执行前先触发此 skill。
 argument-hint: "[<待评估的内容>]"

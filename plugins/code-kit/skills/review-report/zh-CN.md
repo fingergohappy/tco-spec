@@ -2,7 +2,6 @@
 name: review-report
 description: |
   从审查结果生成结构化审查报告文档。读取模板并输出到 docs/review/。也可由其他审查 skill 在审查完成后调用。
-  Generate structured review report documents from audit results. Reads template and outputs to docs/review/. Can also be invoked by other review skills after audit completion.
 when_to_use: |
   当用户说「生成报告」「生成审查报告」「review report」「导出报告」「generate report」时触发。
 argument-hint: ""

@@ -2,12 +2,9 @@
 name: report
 model: haiku
 description: |
-  任务执行完成后向发起方 pane 汇报执行结果。
-  只要任务完成、收到 [task from ...] 或 [fix from ...] 标签、
-  或用户说「汇报结果」、「告诉对方完成了」、「report」，就应该使用此 skill。
   Report execution results to the originating pane after a task completes.
   Use this skill whenever a task finishes, a [task from ...] or [fix from ...] tag
-  is received, or the user says "汇报结果", "告诉对方完成了", or "report".
+  is received, or the user says "report".
 argument-hint: "[<target_pane_id>]"
 context: fork
 disable-model-invocation: false

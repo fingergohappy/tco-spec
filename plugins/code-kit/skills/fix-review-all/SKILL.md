@@ -1,7 +1,6 @@
 ---
 name: fix-review-all
 description: |
-  并行修复代码审查报告中的所有待处理问题。当用户说「修复所有问题」、「fix all review」、「批量修复审查」时触发。
   Batch-fix all pending issues from a code review report in parallel. Accepts the report document path as an argument, extracts all [todo] issues, and invokes fix-review via sub-agents in parallel.
 argument-hint: "<报告文档路径>"
 disable-model-invocation: false

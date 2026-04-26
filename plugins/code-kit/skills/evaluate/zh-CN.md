@@ -2,7 +2,6 @@
 name: evaluate
 description: |
   基于双源证据的严格评估：项目内事实（代码、依赖、配置、git 历史）+ 外部事实（最佳实践、benchmark、社区共识）。所有结论必须引用来源并说明推理过程。
-  Evidence-based rigorous evaluation collecting dual-source evidence: project facts (code, deps, config, git history) and external facts (web search for best practices, benchmarks, community consensus). All conclusions must cite sources and show reasoning chain.
 when_to_use: |
   当用户说「评估」「evaluate」「评价」「分析下」「看看靠不靠谱」「这个对不对」「好不好」「评估这个review」「评估审查结论」时触发。
 argument-hint: "<要评估的内容>"

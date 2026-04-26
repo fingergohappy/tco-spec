@@ -1,7 +1,6 @@
 ---
 name: skill-i18n
 description: |
-  当用户说「翻译 skill」「skill 双语」「生成 zh-CN」「同步翻译」时触发。skill-creator 完成创建/迭代、手动编辑了 SKILL.md 时也会自动触发。支持单个或多个 skill 路径，自动检测源语言，已有 zh-CN.md 时执行增量同步。
   Bilingual skill management: generates SKILL.md (English) + zh-CN.md (Chinese) pairs, and auto-syncs zh-CN.md when SKILL.md changes. Auto-triggers after creating a new skill, editing an existing SKILL.md, or skill-creator workflow completion. Supports single or multiple skill paths, auto-detects source language, and performs incremental sync when zh-CN.md already exists.
 argument-hint: "<skill path> [skill path 2] ..."
 ---
@@ -38,12 +37,12 @@ Use nvim-lsp-init as the reference template. The two file formats are:
 ```yaml
 ---
 name: <skill-name>
-description: <Chinese trigger phrases>. <English description of what the skill does>
+description: <English description of what the skill does>
 argument-hint: "<parameter description>"
 ---
 ```
 
-- frontmatter `description`: **must be bilingual** — Chinese trigger phrases first (triggered when user says "..."), then English functional description
+- frontmatter `description`: **English only** — describe what the skill does and when it triggers
 - Body entirely in English
 - Code blocks, commands, paths kept as-is
 

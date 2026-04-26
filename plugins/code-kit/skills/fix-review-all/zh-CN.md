@@ -2,7 +2,6 @@
 name: fix-review-all
 description: |
   并行修复代码审查报告中的所有待处理问题。接收报告文档路径，提取所有 [todo] 状态问题，启动子代理逐个修复。
-  Fix all pending issues in a code review report in parallel. Accepts a report document path, extracts all [todo] status issues, and launches sub-agents to fix each one via fix-review skill.
 when_to_use: |
   当用户说「修复所有问题」「fix all review」「批量修复审查」时触发。
 argument-hint: "<报告文档路径>"

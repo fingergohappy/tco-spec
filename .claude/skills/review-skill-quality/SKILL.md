@@ -1,10 +1,7 @@
 ---
 name: review-skill-quality
 description: |
-  从 skill 规范角度审查代码。检查 SKILL.md 是否符合 Claude Code 官方插件规范、frontmatter 格式、description 触发覆盖面、执行步骤可操作性、模板完整性。只审查 SKILL.md 文件。
   Review SKILL.md files for compliance with Claude Code official plugin specifications. Checks frontmatter format, description trigger coverage, execution step operability, and template completeness. Only reviews SKILL.md files.
-when_to_use: |
-  当用户说「skill 规范审查」「review skill 质量」「检查 SKILL.md」「skill 合规检查」时触发。
 argument-hint: "[<file path or directory>]"
 ---
 

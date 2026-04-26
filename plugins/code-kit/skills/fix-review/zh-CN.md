@@ -2,7 +2,6 @@
 name: fix-review
 description: |
   修复代码审查报告中的问题并自动更新报告状态。修复前评估建议的合理性，将状态从 [todo] 更新为 [done]。
-  Fix issues found in code review reports and automatically update report status. Evaluates the reasonableness of report suggestions before fixing, then updates status from [todo] to [done] with fix description.
 when_to_use: |
   当用户说「fix review」「修这个问题」「处理这条审查意见」「修复审查」时触发。
 argument-hint: "<报告路径:行号 | 问题描述>"

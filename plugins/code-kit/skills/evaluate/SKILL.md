@@ -1,12 +1,10 @@
 ---
 name: evaluate
 description: |
-  基于事实的严格评估 / Evidence-based rigorous evaluation。
-  当用户说「评估」「evaluate」「评价」「分析下」「看看靠不靠谱」「这个对不对」「好不好」「评估这个review」「评估审查结论」「is this good」「evaluate X」「check if X is reliable」「how does X compare」时触发。
-  强制收集双源证据：项目内事实（代码、依赖、配置、git 历史）+ 外部事实（联网搜索的最佳实践、benchmark、社区共识）。
+  Evidence-based rigorous evaluation.
   Collects dual-source evidence: project facts (code, deps, config, git history) + external facts (web search for best practices, benchmarks, community consensus).
-  所有结论必须引用来源并说明推理过程 / All conclusions must cite sources and show reasoning chain.
-  适用于：技术选型、工具/库评价、架构方案评估、声明验证、代码实践评估、review 结论验证、安全性评估等 / Use for: tech selection, tool/library evaluation, architecture review, claim verification, code practice assessment, review conclusion verification, security audit.
+  All conclusions must cite sources and show reasoning chain.
+  Use for: tech selection, tool/library evaluation, architecture review, claim verification, code practice assessment, review conclusion verification, security audit.
 argument-hint: "<要评估的内容>"
 disable-model-invocation: false
 ---

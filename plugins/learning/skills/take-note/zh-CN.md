@@ -5,7 +5,6 @@ description: |
   每条笔记对应一个独立目录，包含 Markdown 文档 + 可运行的最小代码示例。
   触发条件：用户说「记笔记」「学习笔记」「整理笔记」「记录学习」「take note」「learning note」「summarize what I learned」，
   或者用户表示刚学完某个东西想要记录下来。
-  Also triggers when user shares a learning URL/file and asks to generate notes, or when user says they just finished studying something and want it captured.
 argument-hint: "[<topic>] [--dir <path>] [--from <url|file>]"
 disable-model-invocation: false
 ---

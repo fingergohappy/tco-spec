@@ -2,7 +2,6 @@
 name: agent-tmux
 description: |
   在共享 tmux 会话中启动、重启、停止或检查长期运行的命令。按项目路径和 git 分支自动隔离以防止冲突。
-  Start, restart, stop, or inspect long-running commands in a shared tmux session. Auto-isolates by project path and git branch to prevent conflicts.
 when_to_use: |
   当用户说「启动 dev server」「run in tmux」「后台运行」「长期运行服务」时触发。
 argument-hint: "<path> [--cmd <command>]"

@@ -1,13 +1,8 @@
 ---
 name: learn-from-mistake
 description: |
-  当 AI 被用户纠正错误后，主动询问用户是否要将这个教训固化为防护规则。
-  触发前提：当前对话中 AI 刚犯了错误并被用户纠正（如「你这里写错了」「不是这样的」「不对」）。
-  AI 应在纠正后主动提议：「要不要把这个教训固化下来？」，用户同意后再执行。
-  产出物根据错误性质决定：生成新的防护 skill，或向 CLAUDE.md 追加约束规则。
-  不触发的场景：用户只是在讨论错误但不针对当前 AI 行为；用户想创建与错误无关的新 skill（应触发 skill-creator）。
-  After the AI is corrected by the user, proactively ask whether to固化 (solidify) the lesson as a guardrail rule.
-  Trigger前提: the AI just made a mistake in the current conversation and was corrected by the user (e.g., "you got this wrong", "that's not right", "incorrect").
+  After the AI is corrected by the user, proactively ask whether to solidify the lesson as a guardrail rule.
+  Prerequisite: the AI just made a mistake in the current conversation and was corrected by the user (e.g., "you got this wrong", "that's not right", "incorrect").
   The AI should proactively suggest after the correction: "Want to solidify this lesson?" and only proceed after the user agrees.
   The output depends on the nature of the error: generate a new guardrail skill, or append a constraint rule to CLAUDE.md.
   Do not trigger when: the user is merely discussing errors without targeting the current AI behavior; the user wants to create a new skill unrelated to a mistake (should trigger skill-creator instead).

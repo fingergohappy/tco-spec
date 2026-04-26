@@ -2,7 +2,6 @@
 name: extract-before-duplicate
 description: |
   修改分支逻辑（if/else、switch、match）时，防止在多个分支中复制粘贴相同代码。先提取差异为变量，公共操作放到分支外面。
-  Prevent code duplication in branch logic by extracting differences as variables before adding common operations outside branches. Use when writing or modifying code with if/else, switch, or match branches.
 when_to_use: |
   当用户说「修改分支逻辑」「if/else 重构」「分支去重」「提取公共代码」「防止复制粘贴」时触发。在编写或修改任何包含分支结构的代码时都应检查此 skill。
 argument-hint: ""

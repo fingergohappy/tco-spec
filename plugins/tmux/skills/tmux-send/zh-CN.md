@@ -2,7 +2,6 @@
 name: tmux-send
 description: |
   向指定 tmux 面板发送内容并自动执行。跨面板通信的基础 skill，支持直接发送或通过文件路径发送。
-  Send content to a specified tmux pane and auto-execute. Foundational skill for cross-pane communication. Content can be sent directly or via file path.
 when_to_use: |
   当用户说「发给 7」「发到 %3」「给那边发一下」「发送到 tmux」「在那个面板运行」时触发。只指定了数字目标时，内容从对话上下文中自动提取。
 argument-hint: "[<pane_id>] [<内容>]"

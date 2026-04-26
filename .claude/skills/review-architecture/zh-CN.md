@@ -2,7 +2,6 @@
 name: review-architecture
 description: |
   从架构角度审查代码。检查插件结构、skill 之间的依赖关系、目录组织、模块边界和职责划分。接收文件列表作为输入，输出该角度的审查发现。
-  Review code from an architecture perspective. Checks plugin structure, skill dependencies, directory organization, module boundaries, and responsibility separation. Accepts file list as input, outputs review findings.
 when_to_use: |
   当用户说「架构审查」「review 架构」「检查插件结构」「模块边界审查」时触发。
 argument-hint: "[<文件路径或目录>]"

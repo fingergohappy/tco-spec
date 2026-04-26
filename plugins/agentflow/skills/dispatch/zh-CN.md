@@ -2,7 +2,6 @@
 name: dispatch
 description: |
   将设计文档或任务内容派发到指定 tmux 面板执行。接收端先通过 gate-evaluate 评估再执行。支持首次派发（设计→执行）和修复派发（审查→重做）。
-  Dispatch design documents or task content to a specified tmux pane for execution. The receiving end evaluates first via gate-evaluate, then executes. Supports first-time dispatch and fix dispatch.
 when_to_use: |
   当用户说「发过去」「send 过去」「开始干」「dispatch」「派发到某个 pane」「让他去做」「让{number}去做」「让{number}来」时触发。
 argument-hint: "[loop] [<target_pane_id>] [<文档路径或内联任务>]"

@@ -2,7 +2,6 @@
 name: review-init
 description: |
   分析项目技术栈、依赖和代码结构，生成定制的代码审查 skills。已有 review skills 时展示现有 + 新建议供用户选择。
-  Analyze the current project's tech stack, dependencies, and code structure to generate customized code review skills. If review skills already exist, shows existing + new recommendations for user to decide.
 when_to_use: |
   当用户说「生成 review」「初始化 review」「review init」「生成代码审查」时触发。
 argument-hint: ""

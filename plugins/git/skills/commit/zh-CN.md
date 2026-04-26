@@ -2,7 +2,6 @@
 name: commit
 description: |
   创建原子化 git 提交，包含验证、拆分建议和约定式提交消息。遵循 6 阶段流水线：验证、暂存、分析、消息、提交、报告。
-  Create atomic git commits with validation, split suggestions, and conventional commit messages. Follows a 6-phase pipeline: validate, stage, analyze, message, commit, report.
 when_to_use: |
   当用户说「提交」「commit」「commit一下」时触发。
 argument-hint: "[--no-verify]"

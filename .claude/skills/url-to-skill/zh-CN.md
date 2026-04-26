@@ -2,7 +2,6 @@
 name: url-to-skill
 description: |
   从 URL 自动生成 Claude Code skill 文件。自动抓取内容并生成 SKILL.md 保存到 .claude/skills/ 目录。
-  Auto-generate Claude Code skill files from a URL. Fetches web content and generates a structured SKILL.md saved to .claude/skills/ directory.
 when_to_use: |
   当用户说「转成 skill」「从链接生成 skill」「把这个变成 skill」「url 转 skill」时触发。
 argument-hint: "<URL>"

@@ -2,7 +2,6 @@
 name: skill-i18n
 description: |
   将 ai-kit 项目中的 skill 转换为双语版本：SKILL.md（英文）+ zh-CN.md（中文），并自动同步。支持单个或多个 skill 路径，自动检测源语言，已有 zh-CN.md 时执行增量同步。
-  Bilingual skill management for ai-kit. Generates SKILL.md (English) + zh-CN.md (Chinese) pairs, auto-syncs zh-CN.md when SKILL.md changes. Supports single or multiple skill paths, auto-detects source language, and performs incremental sync.
 when_to_use: |
   当用户说「翻译 skill」「skill 双语」「生成 zh-CN」「同步翻译」「更新翻译」时触发。skill-creator 完成创建/迭代、手动编辑了 SKILL.md 时也会自动触发。
 argument-hint: "<skill路径> [skill路径2] ..."
@@ -40,12 +39,12 @@ argument-hint: "<skill路径> [skill路径2] ..."
 ```yaml
 ---
 name: <skill-name>
-description: <中文触发词>。<English description of what the skill does>
+description: <English description of what the skill does>
 argument-hint: "<参数说明>"
 ---
 ```
 
-- frontmatter `description`：**必须中英双语** — 先写中文触发短语（当用户说「...」时触发），再写英文功能描述
+- frontmatter `description`：**只用英文** — 描述 skill 的功能和触发场景
 - body 全部用英文
 - 代码块、命令、路径保持原样
 

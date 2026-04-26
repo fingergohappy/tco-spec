@@ -3,8 +3,6 @@ name: take-note
 description: |
   Generate structured learning notes from user's oral description, reference materials, or conversation context.
   Each note gets its own directory containing a Markdown document + runnable minimal code examples.
-  触发条件：用户说「记笔记」「学习笔记」「整理笔记」「记录学习」「take note」「learning note」「summarize what I learned」，
-  或者用户表示刚学完某个东西想要记录下来。
   Also triggers when user shares a learning URL/file and asks to generate notes, or when user says they just finished studying something and want it captured.
 argument-hint: "[<topic>] [--dir <path>] [--from <url|file>]"
 disable-model-invocation: false

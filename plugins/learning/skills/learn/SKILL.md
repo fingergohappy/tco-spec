@@ -1,9 +1,6 @@
 ---
 name: learn
 description: |
-  进入学习模式：用最简单的例子解释概念、简化已有内容、通过代码类比帮助理解。
-  触发条件：用户说「学」「学习」「解释」「举例」「举个例子」「simplify」「explain」，
-  或者用户问了一个概念性问题想快速理解，或者用户想让复杂内容变简单，或者用户想用类比理解某个东西。
   When user wants to understand something quickly, get a minimal example, or simplify existing content. Triggers on "learn", "explain", "give me an example", "simplify", "analogy", or any question where the goal is understanding rather than implementation.
 argument-hint: "<topic or question>"
 disable-model-invocation: false

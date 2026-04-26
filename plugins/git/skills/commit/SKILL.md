@@ -1,10 +1,8 @@
 ---
 name: commit
 description: |
-  创建原子 git commit，包含验证、拆分建议和 conventional commit message。
   Create atomic git commits with validation, split suggestions, and conventional commit messages.
-  当用户说"提交"、"commit"、"commit一下"时触发。
-  Triggers when the user says "提交", "commit", or "commit一下".
+  Triggers when the user says "commit".
 model: haiku
 context: fork
 argument-hint: [--no-verify]

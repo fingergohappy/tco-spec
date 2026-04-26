@@ -2,7 +2,6 @@
 name: review-diff
 description: |
   增量代码审查。基于 git diff 获取变更文件，启动子代理并行调用所有 review skills，汇总结果。审查角度：shell 脚本质量、架构、skill 规范。
-  Incremental code review based on git diff. Launches sub-agents in parallel calling all review skills and aggregates results. Reviews from shell quality, architecture, and skill specification perspectives.
 when_to_use: |
   当用户说「review diff」「审查变更」「review 改动」「检查 diff」「增量审查」时触发。
 argument-hint: "[<base_branch>]"

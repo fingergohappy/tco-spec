@@ -1,6 +1,6 @@
 ---
 name: nvim-lsp-init
-description: 当用户说「生成 lsp 脚本」「初始化 lsp 环境」「nvim lsp」「lsp 环境配置」或 "generate lsp script"、"setup lsp environment"、"nvim lsp init" 时触发。Generate Neovim LSP environment setup scripts that configure PATH and env vars before launching nvim. Analyzes project tech stack and SDK tools to produce a source-able shell script.
+description: Generate Neovim LSP environment setup scripts that configure PATH and env vars before launching nvim. Analyzes project tech stack and SDK tools to produce a source-able shell script.
 argument-hint: "[<输出路径>]"
 disable-model-invocation: false
 ---

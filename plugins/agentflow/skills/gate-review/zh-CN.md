@@ -2,7 +2,6 @@
 name: gate-review
 description: |
   派发端出口守卫。对照原始设计文档审查接收端的工作成果，决定批准、要求修复或升级。也支持本地代码对照设计文档的自审。
-  Exit guard for the dispatching end. Reviews the receiving agent's work against the original design document. Determines whether to approve, request fixes, or escalate. Also supports local self-review.
 when_to_use: |
   当用户说「审查下」「review」「看看做得怎么样」「检查结果」时触发。收到带有 [report from ...] 标签的消息时自动触发。
 argument-hint: "[<汇报内容或设计文档路径>]"

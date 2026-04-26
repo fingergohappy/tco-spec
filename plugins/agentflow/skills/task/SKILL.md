@@ -2,16 +2,10 @@
 name: task
 model: opus
 description: |
-  将需求整理为结构化的任务文档，可以是功能设计、变更方案、或通用任务描述。
   Organize requirements into structured task documents — feature designs, change proposals, or general task descriptions.
-  两种工作模式：(1) 对话开头触发时，进入讨论模式，只讨论不写代码；
   Two working modes: (1) triggered at conversation start → discussion mode (discuss only, no code);
-  (2) 对话中途触发时，直接总结已有对话生成文档。输出到 docs/tasks/。
   (2) triggered mid-conversation → directly summarize existing discussion into a document. Output to docs/tasks/.
-  当讨论新功能、代码变更、任务规划，或用户说「整理下」、「总结下」、
-  「写个文档」、「生成任务」时使用。
-  Use when discussing new features, code changes, task planning, or when the user says "整理下", "总结下",
-  "写个文档", "生成任务" (organize, summarize, write a doc, generate a task).
+  Use when discussing new features, code changes, task planning, or when the user says "organize", "summarize", "write a doc", or "generate a task".
 argument-hint: [任务名称]
 disable-model-invocation: false
 ---
