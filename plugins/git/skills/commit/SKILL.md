@@ -4,7 +4,7 @@ description: commit
 model: haiku
 context: fork
 argument-hint: "push | --no-verify "
-disable-model-invocation: false
+disable-model-invocation: true
 ---
 
 # Commit
