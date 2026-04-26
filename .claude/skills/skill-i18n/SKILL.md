@@ -1,14 +1,21 @@
 ---
 name: skill-i18n
 description: |
-  将 skill 转换为双语版本（SKILL.md 英文 + zh-CN.md 中文）。当用户说「翻译 skill」「skill 双语」「生成 zh-CN」「i18n skill」「translate skill」时触发。
-  支持单个或多个 skill 路径，自动检测原始语言，按 nvim-lsp-init 的双语格式生成。
+  当用户说「翻译 skill」「skill 双语」「生成 zh-CN」「同步翻译」时触发。Bilingual skill management: generates SKILL.md (English) + zh-CN.md (Chinese) pairs, and auto-syncs zh-CN.md when SKILL.md changes.
+  Auto-triggers after: creating a new skill, editing an existing SKILL.md, skill-creator workflow completion, or any skill content modification.
+  Supports single or multiple skill paths, auto-detects source language, and performs incremental sync when zh-CN.md already exists.
 argument-hint: "<skill路径> [skill路径2] ..."
 ---
 
 # skill-i18n
 
 将 ai-kit 项目中的 skill 转换为双语版本：SKILL.md（英文）+ zh-CN.md（中文）。
+
+## 硬性约束
+
+- **增量同步和自动同步时，禁止修改 SKILL.md 原文档** — 只允许修改 zh-CN.md
+- SKILL.md 只在全量生成阶段（目录下不存在 SKILL.md 或原始为中文需要翻译为英文）才会被写入或覆盖
+- 如果用户仅说「同步翻译」「更新翻译」，则只更新 zh-CN.md，不触碰 SKILL.md
 
 ## 参数解析
 
@@ -137,19 +144,26 @@ skill-i18n: fix-review
   - tmux-send ✅
 ```
 
-## 与 skill-creator 的协作
+## 自动同步
 
-当用户通过 `skill-creator` skill 创建或修改了某个 skill 后，应同步触发 `skill-i18n` 更新对应的翻译文档。
+当检测到以下操作涉及 SKILL.md 时，**必须**主动同步对应的 zh-CN.md：
 
-### 流程
+| 触发场景 | 同步行为 |
+|----------|---------|
+| skill-creator 完成创建/迭代 | 自动更新该 skill 的 zh-CN.md |
+| 手动编辑了 SKILL.md 内容 | 自动更新该 skill 的 zh-CN.md |
+| 用户说「更新翻译」「同步翻译」 | 重新生成/更新 zh-CN.md |
 
-1. 用户使用 `skill-creator` 完成 skill 的创建或迭代
-2. skill-creator 流程结束后，提醒用户：「是否同步生成/更新双语版本？」
-3. 如果用户同意，按本 skill 的执行步骤处理刚创建/修改的 skill
+### 同步流程
 
-### 翻译文档的创建方式
+1. 检测目标 skill 目录下是否已有 zh-CN.md
+2. 如果有 → 增量同步：对比 SKILL.md 和 zh-CN.md，更新变更的 section，保留未变更的翻译
+3. 如果没有 → 全量生成：按上方「执行步骤」生成 zh-CN.md
+4. 输出同步结果：`已同步 zh-CN.md (增量/全量)`
 
-翻译文档（zh-CN.md）应通过 `skill-creator` skill 来创建，而非手动编写。具体做法：
+### 翻译文档的质量保证
+
+翻译文档（zh-CN.md）可通过 `skill-creator` skill 的评估流程来验证质量：
 
 1. 将已生成的 SKILL.md（英文版）作为输入
 2. 使用 `skill-creator` 创建 zh-CN.md，遵循本 skill 定义的双语格式规范

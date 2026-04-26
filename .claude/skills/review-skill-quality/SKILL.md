@@ -11,7 +11,13 @@ argument-hint: "[<文件路径或目录>]"
 
 从 skill 规范角度审查所有 SKILL.md 文件的质量。
 
-官方规范参考：https://github.com/anthropics/claude-code/blob/main/plugins/plugin-dev/skills/skill-development/SKILL.md
+官方规范参考（按权威性排序）：
+
+- https://code.claude.com/docs/en/skills — 最权威，包含 Frontmatter reference 完整字段表
+- https://code.claude.com/docs/en/plugins — 插件开发指南
+- https://code.claude.com/docs/en/plugins-reference — 插件技术参考
+- https://code.claude.com/docs/en/plugin-marketplaces#overview — 插件市场与分发规范
+- https://github.com/anthropics/claude-code/blob/main/plugins/plugin-dev/skills/skill-development/SKILL.md — skill-development skill 的建议（非平台规范）
 
 ## 审查范围
 
@@ -21,14 +27,14 @@ argument-hint: "[<文件路径或目录>]"
 
 ### Claude Code 官方规范合规 [CRITICAL]
 
-依据官方文档，检查以下硬性要求：
+依据官方文档（code.claude.com/docs/en/skills），检查以下硬性要求：
 
-- description 是否使用第三人称格式（"This skill should be used when the user asks to..."）
-- description 是否包含具体的触发短语（用引号括起来的用户原话），而非模糊描述如"Use this skill when working with X"
-- frontmatter 是否只使用官方支持的字段：`name`、`description`、`version`、`argument-hint`、`allowed-tools`、`model`、`context`、`disable-model-invocation`
-- 是否使用了非标准字段（如 `when_to_use`、`triggers` 等自定义字段），这些字段不会被 Claude Code 读取
+- description 是否包含功能描述和触发场景。官方推荐格式为直述句：`"功能描述. Use when 触发场景1, 触发场景2, or when the user asks '触发短语'"`。注意：官方未强制要求第三人称格式，"This skill should be used when..." 仅为 skill-development skill 的建议
+- description 是否包含具体的触发短语或触发场景，而非仅描述功能
+- frontmatter 是否只使用官方支持的字段（完整列表）：`name`、`description`、`when_to_use`、`argument-hint`、`arguments`、`disable-model-invocation`、`user-invocable`、`allowed-tools`、`model`、`effort`、`context`、`agent`、`hooks`、`paths`、`shell`
+- `when_to_use` 是官方支持字段，会追加到 description 后参与触发匹配，受 1,536 字符上限约束。可用于存放触发短语
 - 资源目录是否遵循官方约定：`references/`（参考文档）、`examples/`（示例）、`scripts/`（脚本）
-- 信息层级是否遵循渐进式披露原则：frontmatter（高层元数据）→ SKILL.md 正文（详细指令）→ references/（深度参考）
+- 信息层级是否遵循渐进式披露原则：frontmatter（高层元数据，~100 词）→ SKILL.md 正文（详细指令，<500 行）→ references/（深度参考）
 
 ### Frontmatter 规范 [HIGH]
 

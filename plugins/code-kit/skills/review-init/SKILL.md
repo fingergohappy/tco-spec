@@ -129,10 +129,10 @@ argument-hint: "[<文件路径或目录>]"
 
 ### 5. 生成汇总 skills
 
-读取模板生成两个汇总 skill：
+读取本 SKILL.md 同目录下的模板生成两个汇总 skill：
 
-- `.claude/skills/review-full/SKILL.md` — 基于 [review_full_template.md](references/review_full_template.md)
-- `.claude/skills/review-diff/SKILL.md` — 基于 [review_diff_template.md](references/review_diff_template.md)
+- `.claude/skills/review-full/SKILL.md` — 基于 `references/review_full_template.md`
+- `.claude/skills/review-diff/SKILL.md` — 基于 `references/review_diff_template.md`
 
 生成时将模板中的 `{review_skill_list}` 替换为实际生成的 review skill 名称列表，格式如下：
 

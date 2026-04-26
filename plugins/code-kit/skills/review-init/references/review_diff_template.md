@@ -104,5 +104,5 @@ Diff 内容：
 是否生成审查报告到 docs/review/？
 ```
 
-- 用户确认 → 读取 [report_template.md](references/report_template.md) 模板，填入审查结果，输出到 `docs/review/{日期}_diff_review.md`
+- 用户确认 → 使用 `/review-report` skill 生成审查报告
 - 用户拒绝 → 结束
