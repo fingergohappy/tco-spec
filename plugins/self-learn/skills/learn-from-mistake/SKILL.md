@@ -12,6 +12,7 @@ description: |
   The output depends on the nature of the error: generate a new guardrail skill, or append a constraint rule to CLAUDE.md.
   Do not trigger when: the user is merely discussing errors without targeting the current AI behavior; the user wants to create a new skill unrelated to a mistake (should trigger skill-creator instead).
 argument-hint: "[<error description>]"
+disable-model-invocation: false
 ---
 
 # learn-from-mistake

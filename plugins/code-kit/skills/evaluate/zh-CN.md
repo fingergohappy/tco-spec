@@ -6,6 +6,7 @@ description: |
 when_to_use: |
   当用户说「评估」「evaluate」「评价」「分析下」「看看靠不靠谱」「这个对不对」「好不好」「评估这个review」「评估审查结论」时触发。
 argument-hint: "<要评估的内容>"
+disable-model-invocation: false
 ---
 
 # evaluate

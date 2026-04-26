@@ -13,6 +13,7 @@ description: |
   Use when discussing new features, code changes, task planning, or when the user says "整理下", "总结下",
   "写个文档", "生成任务" (organize, summarize, write a doc, generate a task).
 argument-hint: [任务名称]
+disable-model-invocation: false
 ---
 
 # task

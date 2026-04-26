@@ -8,6 +8,7 @@ when_to_use: |
 argument-hint: "[--no-verify]"
 model: haiku
 context: fork
+disable-model-invocation: false
 ---
 
 # Commit

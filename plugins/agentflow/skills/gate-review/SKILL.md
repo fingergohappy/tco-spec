@@ -12,6 +12,7 @@ description: |
   Also usable for local code self-review: review code against design documents after implementation.
 argument-hint: "[<report content or design document path>]"
 context: fork
+disable-model-invocation: false
 ---
 
 # gate-review

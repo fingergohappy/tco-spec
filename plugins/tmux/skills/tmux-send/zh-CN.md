@@ -7,6 +7,7 @@ when_to_use: |
   当用户说「发给 7」「发到 %3」「给那边发一下」「发送到 tmux」「在那个面板运行」时触发。只指定了数字目标时，内容从对话上下文中自动提取。
 argument-hint: "[<pane_id>] [<内容>]"
 model: haiku
+disable-model-invocation: false
 ---
 
 # tmux-send

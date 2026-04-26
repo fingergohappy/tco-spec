@@ -7,6 +7,7 @@ description: |
   或者用户表示刚学完某个东西想要记录下来。
   Also triggers when user shares a learning URL/file and asks to generate notes, or when user says they just finished studying something and want it captured.
 argument-hint: "[<topic>] [--dir <path>] [--from <url|file>]"
+disable-model-invocation: false
 ---
 
 # take-note

@@ -1,7 +1,15 @@
 {
   "name": "agentflow",
-  "description": "Agent collaboration flow: task → dispatch → evaluate → report → review → redo",
   "version": "1.0.0",
-  "author": { "name": "finger" },
-  "license": "MIT"
+  "description": "Agent collaboration flow: task → dispatch → evaluate → report → review → redo",
+  "author": {
+    "name": "finger",
+    "email": "fingergohappy@gmail.com",
+    "url": "https://github.com/fingergohappy"
+  },
+  "homepage": "https://github.com/fingergohappy/ai-kit/tree/main/plugins/agentflow",
+  "repository": "https://github.com/fingergohappy/ai-kit",
+  "license": "MIT",
+  "keywords": ["agent", "workflow", "dispatch", "evaluate", "review"],
+  "skills": "./skills/"
 }

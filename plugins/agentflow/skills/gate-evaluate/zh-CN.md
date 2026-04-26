@@ -8,6 +8,7 @@ when_to_use: |
 argument-hint: "[<待评估的内容>]"
 model: opus
 context: fork
+disable-model-invocation: false
 ---
 
 # gate-evaluate

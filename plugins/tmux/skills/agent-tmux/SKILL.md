@@ -8,6 +8,7 @@ description: |
   Use when user says "启动 dev server", "run in tmux", "后台运行", "长期运行服务".
 argument-hint: <path> [--cmd <command>]
 context: fork
+disable-model-invocation: false
 ---
 
 # agent-tmux

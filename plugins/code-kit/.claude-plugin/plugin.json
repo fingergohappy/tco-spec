@@ -1,0 +1,15 @@
+{
+  "name": "code-kit",
+  "version": "1.0.0",
+  "description": "Code review, evaluation, and fix utilities for quality assurance workflows",
+  "author": {
+    "name": "finger",
+    "email": "fingergohappy@gmail.com",
+    "url": "https://github.com/fingergohappy"
+  },
+  "homepage": "https://github.com/fingergohappy/ai-kit/tree/main/plugins/code-kit",
+  "repository": "https://github.com/fingergohappy/ai-kit",
+  "license": "MIT",
+  "keywords": ["code-review", "evaluate", "fix", "lsp", "quality"],
+  "skills": "./skills/"
+}

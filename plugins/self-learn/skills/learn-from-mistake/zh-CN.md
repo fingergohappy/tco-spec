@@ -6,6 +6,7 @@ description: |
 when_to_use: |
   当 AI 被用户纠正错误后主动触发。AI 应在纠正后主动提议：「要不要把这个教训固化下来？」不触发的场景：用户只是在讨论错误但不针对当前 AI 行为。
 argument-hint: "[<错误描述>]"
+disable-model-invocation: false
 ---
 
 # learn-from-mistake

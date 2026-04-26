@@ -1,0 +1,38 @@
+{
+  "name": "agentflow",
+  "version": "1.0.0",
+  "description": "Agent collaboration flow for task dispatch, evaluation, reporting, and review.",
+  "author": {
+    "name": "finger",
+    "email": "fingergohappy@gmail.com",
+    "url": "https://github.com/fingergohappy"
+  },
+  "homepage": "https://github.com/fingergohappy/ai-kit/tree/main/plugins/agentflow",
+  "repository": "https://github.com/fingergohappy/ai-kit",
+  "license": "MIT",
+  "keywords": [
+    "agent",
+    "workflow",
+    "dispatch",
+    "evaluate",
+    "review"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Agentflow",
+    "shortDescription": "Coordinate task dispatch, evaluation, reporting, and review.",
+    "longDescription": "Workflow skills for sending tasks to another pane, evaluating inbound work, reporting results, and reviewing deliverables.",
+    "developerName": "finger",
+    "category": "Productivity",
+    "capabilities": [
+      "Read",
+      "Write"
+    ],
+    "websiteURL": "https://github.com/fingergohappy/ai-kit",
+    "defaultPrompt": [
+      "Use agentflow:task to turn this request into a structured task document.",
+      "Use agentflow:dispatch to send this task to another tmux pane.",
+      "Use agentflow:gate-review to review the reported result."
+    ]
+  }
+}

@@ -6,6 +6,7 @@ description: |
 when_to_use: |
   当用户说「生成 review」「初始化 review」「review init」「生成代码审查」时触发。
 argument-hint: ""
+disable-model-invocation: false
 ---
 
 # review-init

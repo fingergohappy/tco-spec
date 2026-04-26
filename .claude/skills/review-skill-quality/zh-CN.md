@@ -19,6 +19,7 @@ argument-hint: "[<文件路径或目录>]"
 - https://code.claude.com/docs/en/plugins-reference — 插件技术参考
 - https://code.claude.com/docs/en/plugin-marketplaces#overview — 插件市场与分发规范
 - https://github.com/anthropics/claude-code/blob/main/plugins/plugin-dev/skills/skill-development/SKILL.md — skill-development skill 的建议（非平台规范）
+- https://code.claude.com/docs/en/best-practices
 
 ## Review Scope
 

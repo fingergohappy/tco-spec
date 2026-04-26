@@ -1,0 +1,36 @@
+{
+  "name": "learning",
+  "version": "1.0.0",
+  "description": "Personal learning note generation and concept explanation skills.",
+  "author": {
+    "name": "finger",
+    "email": "fingergohappy@gmail.com",
+    "url": "https://github.com/fingergohappy"
+  },
+  "homepage": "https://github.com/fingergohappy/ai-kit/tree/main/plugins/learning",
+  "repository": "https://github.com/fingergohappy/ai-kit",
+  "license": "MIT",
+  "keywords": [
+    "learning",
+    "notes",
+    "knowledge",
+    "study"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Learning",
+    "shortDescription": "Explain concepts and generate structured learning notes.",
+    "longDescription": "Skills for simplifying concepts with examples and turning learning sessions, references, or conversations into structured notes.",
+    "developerName": "finger",
+    "category": "Productivity",
+    "capabilities": [
+      "Read",
+      "Write"
+    ],
+    "websiteURL": "https://github.com/fingergohappy/ai-kit",
+    "defaultPrompt": [
+      "Use learning:learn to explain this concept with a minimal example.",
+      "Use learning:take-note to turn this learning session into structured notes."
+    ]
+  }
+}

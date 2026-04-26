@@ -9,6 +9,7 @@ description: |
   Also triggers on: "发送到 tmux", "在那个面板运行", "send to pane", "run in tmux", "paste to terminal", or any phrase expressing intent to send content/commands/code to a pane.
   也包括：「发送到 tmux」「在那个面板运行」「send to pane」「run in tmux」「paste to terminal」，以及任何表达"把内容/命令/代码发到某个 pane"意图的话。
 argument-hint: "[<pane_id>] [<内容>]"
+disable-model-invocation: false
 ---
 
 # tmux-send

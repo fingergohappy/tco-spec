@@ -6,6 +6,7 @@ description: |
   或者用户问了一个概念性问题想快速理解，或者用户想让复杂内容变简单，或者用户想用类比理解某个东西。
   When user wants to understand something quickly, get a minimal example, or simplify existing content. Triggers on "learn", "explain", "give me an example", "simplify", "analogy", or any question where the goal is understanding rather than implementation.
 argument-hint: "<topic or question>"
+disable-model-invocation: false
 ---
 
 # learn

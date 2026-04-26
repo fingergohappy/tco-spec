@@ -8,6 +8,7 @@ when_to_use: |
 argument-hint: "[loop] [<target_pane_id>] [<文档路径或内联任务>]"
 model: haiku
 context: fork
+disable-model-invocation: false
 ---
 
 # dispatch

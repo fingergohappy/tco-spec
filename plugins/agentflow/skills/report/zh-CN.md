@@ -8,6 +8,7 @@ when_to_use: |
 argument-hint: "[<target_pane_id>]"
 model: haiku
 context: fork
+disable-model-invocation: false
 ---
 
 # report

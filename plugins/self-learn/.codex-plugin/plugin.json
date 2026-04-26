@@ -1,0 +1,35 @@
+{
+  "name": "self-learn",
+  "version": "1.0.0",
+  "description": "AI self-reflection and learning skills for capturing lessons from mistakes.",
+  "author": {
+    "name": "finger",
+    "email": "fingergohappy@gmail.com",
+    "url": "https://github.com/fingergohappy"
+  },
+  "homepage": "https://github.com/fingergohappy/ai-kit/tree/main/plugins/self-learn",
+  "repository": "https://github.com/fingergohappy/ai-kit",
+  "license": "MIT",
+  "keywords": [
+    "self-learn",
+    "reflection",
+    "mistake",
+    "lesson"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Self Learn",
+    "shortDescription": "Capture lessons from corrected mistakes.",
+    "longDescription": "A guardrail workflow for turning corrected mistakes into durable lessons, either as new protective skills or explicit project rules.",
+    "developerName": "finger",
+    "category": "Productivity",
+    "capabilities": [
+      "Read",
+      "Write"
+    ],
+    "websiteURL": "https://github.com/fingergohappy/ai-kit",
+    "defaultPrompt": [
+      "Use self-learn:learn-from-mistake to turn this correction into a reusable guardrail."
+    ]
+  }
+}

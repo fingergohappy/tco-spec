@@ -4,6 +4,7 @@ description: |
   当用户说「生成报告」「生成审查报告」「导出报告」或 "review report"、"generate report" 时触发。也可由其他 review skill 在审查完成后自动调用。
   Generate structured review report from audit results.
 argument-hint: ""
+disable-model-invocation: false
 ---
 
 # review-report

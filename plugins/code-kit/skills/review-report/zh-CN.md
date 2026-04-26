@@ -6,6 +6,7 @@ description: |
 when_to_use: |
   当用户说「生成报告」「生成审查报告」「review report」「导出报告」「generate report」时触发。
 argument-hint: ""
+disable-model-invocation: false
 ---
 
 # review-report

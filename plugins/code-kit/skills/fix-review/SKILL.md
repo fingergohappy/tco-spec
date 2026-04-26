@@ -5,6 +5,7 @@ description: |
   Supports locating issues by report path + line number, or by searching with a natural language description.
   Before fixing, evaluate whether the report's suggestion is reasonable, then formulate a fix plan. After the fix is applied, automatically update the report status from [todo] to [done] and append a fix description.
 argument-hint: "<report-path:line-number | issue-description>"
+disable-model-invocation: false
 ---
 
 # fix-review

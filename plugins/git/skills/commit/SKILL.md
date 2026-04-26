@@ -8,6 +8,7 @@ description: |
 model: haiku
 context: fork
 argument-hint: [--no-verify]
+disable-model-invocation: false
 ---
 
 # Commit

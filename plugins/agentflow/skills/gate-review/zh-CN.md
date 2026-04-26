@@ -8,6 +8,7 @@ when_to_use: |
 argument-hint: "[<汇报内容或设计文档路径>]"
 model: opus
 context: fork
+disable-model-invocation: false
 ---
 
 # gate-review

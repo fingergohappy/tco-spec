@@ -6,6 +6,7 @@ description: |
 when_to_use: |
   当用户说「rebase」「合回去」「merge 回去」「rebase 到 root」时触发。
 argument-hint: "[feature 名称，留空则自动检测]"
+disable-model-invocation: false
 ---
 
 # rebase-to-root

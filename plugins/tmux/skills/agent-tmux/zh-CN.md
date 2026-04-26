@@ -8,6 +8,7 @@ when_to_use: |
 argument-hint: "<path> [--cmd <command>]"
 model: haiku
 context: fork
+disable-model-invocation: false
 ---
 
 # agent-tmux

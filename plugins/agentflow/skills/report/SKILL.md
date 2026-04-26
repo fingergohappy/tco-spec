@@ -10,6 +10,7 @@ description: |
   is received, or the user says "汇报结果", "告诉对方完成了", or "report".
 argument-hint: "[<target_pane_id>]"
 context: fork
+disable-model-invocation: false
 ---
 
 # report

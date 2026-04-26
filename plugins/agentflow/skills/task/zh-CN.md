@@ -7,6 +7,7 @@ when_to_use: |
   当用户说「整理下」「总结下」「写个文档」「生成任务」「讨论新功能」「代码变更」「任务规划」时触发。
 argument-hint: "[任务名称]"
 model: opus
+disable-model-invocation: false
 ---
 
 # task

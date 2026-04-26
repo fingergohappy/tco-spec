@@ -6,6 +6,7 @@ description: |
 when_to_use: |
   当用户说「修复所有问题」「fix all review」「批量修复审查」时触发。
 argument-hint: "<报告文档路径>"
+disable-model-invocation: false
 ---
 
 # fix-review-all

@@ -7,6 +7,7 @@ when_to_use: |
   当用户说「生成 lsp 脚本」「初始化 lsp 环境」「nvim lsp」「lsp 环境配置」时触发。
   Also triggers on "generate lsp script", "setup lsp environment", "nvim lsp init".
 argument-hint: "[<输出路径>]"
+disable-model-invocation: false
 ---
 
 # nvim-lsp-init

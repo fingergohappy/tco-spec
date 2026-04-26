@@ -8,6 +8,7 @@ description: |
   Triggered when the user says "generate review", "initialize review", "review init", or "generate code review".
   If the project already has review skills, use merge logic: show existing + new suggestions, and let the user decide what to add or remove.
 argument-hint: ""
+disable-model-invocation: false
 ---
 
 # review-init

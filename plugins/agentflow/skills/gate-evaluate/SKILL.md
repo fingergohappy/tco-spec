@@ -14,6 +14,7 @@ description: |
   tags. Also triggered when the user says "evaluate".
 argument-hint: "[<content to evaluate>]"
 context: fork
+disable-model-invocation: false
 ---
 
 # gate-evaluate

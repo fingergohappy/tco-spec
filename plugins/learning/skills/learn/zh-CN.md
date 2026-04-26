@@ -7,6 +7,7 @@ when_to_use: |
   当用户说「学」「学习」「解释」「举例」「举个例子」「simplify」「explain」时触发。
   或者用户问了一个概念性问题想快速理解，或者用户想让复杂内容变简单，或者用户想用类比理解某个东西。
 argument-hint: "<topic or question>"
+disable-model-invocation: false
 ---
 
 # learn

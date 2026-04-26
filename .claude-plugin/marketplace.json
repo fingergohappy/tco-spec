@@ -11,18 +11,39 @@
   "plugins": [
     {
       "name": "agentflow",
-      "description": "Agent collaboration loop: task → dispatch → evaluate → report → review → redo",
-      "source": "./plugins/agentflow"
+      "description": "Agent collaboration flow: task → dispatch → evaluate → report → review → redo",
+      "source": "./plugins/agentflow",
+      "category": "Productivity"
     },
     {
-      "name": "tmux",
-      "description": "Tmux infrastructure utilities for inter-pane communication",
-      "source": "./plugins/tmux"
+      "name": "code-kit",
+      "description": "Code review, evaluation, and fix utilities for quality assurance workflows",
+      "source": "./plugins/code-kit",
+      "category": "Coding"
     },
     {
       "name": "git",
-      "description": "Git worktree and branching utilities",
-      "source": "./plugins/git"
+      "description": "Git worktree and branching utilities for rebasing and atomic commits",
+      "source": "./plugins/git",
+      "category": "Coding"
+    },
+    {
+      "name": "learning",
+      "description": "Personal learning note generation and management skills",
+      "source": "./plugins/learning",
+      "category": "Productivity"
+    },
+    {
+      "name": "self-learn",
+      "description": "AI self-reflection and learning skills for capturing lessons from mistakes",
+      "source": "./plugins/self-learn",
+      "category": "Productivity"
+    },
+    {
+      "name": "tmux",
+      "description": "Tmux utilities for sending commands and text across panes",
+      "source": "./plugins/tmux",
+      "category": "Developer Tools"
     }
   ]
 }

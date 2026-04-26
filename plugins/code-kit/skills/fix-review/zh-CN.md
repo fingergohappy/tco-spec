@@ -6,6 +6,7 @@ description: |
 when_to_use: |
   当用户说「fix review」「修这个问题」「处理这条审查意见」「修复审查」时触发。
 argument-hint: "<报告路径:行号 | 问题描述>"
+disable-model-invocation: false
 ---
 
 # fix-review

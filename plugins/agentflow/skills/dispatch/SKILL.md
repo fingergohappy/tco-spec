@@ -10,6 +10,7 @@ description: |
   Triggers when user says "send it over", "dispatch", "let {number} do it", "have {number} handle it", etc.
 argument-hint: "[loop] [<target_pane_id>] [<文档路径或内联任务>]"
 context: fork
+disable-model-invocation: false
 ---
 
 # dispatch

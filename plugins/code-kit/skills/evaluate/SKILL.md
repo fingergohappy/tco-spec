@@ -8,6 +8,7 @@ description: |
   所有结论必须引用来源并说明推理过程 / All conclusions must cite sources and show reasoning chain.
   适用于：技术选型、工具/库评价、架构方案评估、声明验证、代码实践评估、review 结论验证、安全性评估等 / Use for: tech selection, tool/library evaluation, architecture review, claim verification, code practice assessment, review conclusion verification, security audit.
 argument-hint: "<要评估的内容>"
+disable-model-invocation: false
 ---
 
 # evaluate
