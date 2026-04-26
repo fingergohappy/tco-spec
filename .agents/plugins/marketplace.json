@@ -5,10 +5,10 @@
   },
   "plugins": [
     {
-      "name": "spec-workflow",
+      "name": "agentflow",
       "source": {
         "source": "local",
-        "path": "./plugins/spec-workflow"
+        "path": "./plugins/agentflow"
       },
       "policy": {
         "installation": "AVAILABLE",

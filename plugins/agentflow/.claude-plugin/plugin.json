@@ -1,0 +1,7 @@
+{
+  "name": "agentflow",
+  "description": "Agent collaboration flow: task → dispatch → evaluate → report → review → redo",
+  "version": "1.0.0",
+  "author": { "name": "finger" },
+  "license": "MIT"
+}

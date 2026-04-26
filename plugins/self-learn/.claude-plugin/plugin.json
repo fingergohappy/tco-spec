@@ -1,0 +1,7 @@
+{
+  "name": "self-learn",
+  "description": "AI self-reflection and learning skills for capturing lessons from mistakes",
+  "version": "1.0.0",
+  "author": { "name": "finger" },
+  "license": "MIT"
+}

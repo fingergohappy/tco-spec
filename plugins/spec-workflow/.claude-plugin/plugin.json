@@ -1,7 +1,0 @@
-{
-  "name": "spec-workflow",
-  "description": "Spec-driven workflow: design docs, multi-agent collaboration, code review, feedback loop via tmux",
-  "version": "1.0.0",
-  "author": { "name": "finger" },
-  "license": "MIT"
-}

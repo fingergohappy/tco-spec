@@ -142,4 +142,3 @@ git commit -m "<type>: <description>"
 建议的后续步骤：
 
 - `git push`
-- `/code-review`

@@ -1,21 +1,17 @@
 # ai-kit
 
-Multi-agent collaboration plugin for AI coding tools — spec-driven workflow via tmux.
+Multi-agent collaboration plugin for AI coding tools — task-driven workflow via tmux.
 
 ## Overview
 
-ai-kit coordinates multiple AI agents (Claude Code, Codex, OpenCode, etc.) working in separate tmux panes through a structured spec-driven workflow. Instead of ad-hoc communication, agents exchange structured messages with task labels and feedback tags, creating a traceable collaboration loop.
+ai-kit coordinates multiple AI agents (Claude Code, Codex, OpenCode, etc.) working in separate tmux panes through a structured task-driven workflow. Instead of ad-hoc communication, agents exchange structured messages with task labels and report tags, creating a traceable collaboration loop.
 
 ```
 ┌─────────────┐    task from     ┌─────────────┐
 │  Agent A     │ ───────────────→ │  Agent B     │
-│  (Designer)  │                  │  (Implementer)│
+│  (Sender)    │                  │  (Receiver)  │
 │              │ ←─────────────── │              │
-└─────────────┘  feedback from   └─────────────┘
-                  ┌─────────────┐
-                  │  Agent C     │
-                  │  (Reviewer)  │
-                  └─────────────┘
+└─────────────┘   report from    └─────────────┘
 ```
 
 ## Installation
@@ -31,7 +27,7 @@ Register this repository as a plugin marketplace, then install:
 Install the plugin:
 
 ```
-/plugin install spec-workflow@ai-kit
+/plugin install agentflow@ai-kit
 /plugin install tmux@ai-kit
 /plugin install git@ai-kit
 ```
@@ -39,8 +35,8 @@ Install the plugin:
 After installation, restart Claude Code. Skills will be available with the plugin prefix:
 
 ```
-/spec-workflow:spec-feature login-system
-/spec-workflow:spec-implement docs/spec/login_feature.md
+/agentflow:task login-system
+/agentflow:dispatch %7 docs/tasks/login_feature.md
 /git:commit
 /tmux:tmux-send %7 "hello"
 ```
@@ -56,35 +52,25 @@ claude --plugin-dir /path/to/ai-kit
 
 ### Codex (OpenAI)
 
-This repository now includes Codex plugin manifests for `spec-workflow`, `tmux`, and `git`.
+This repository includes Codex plugin manifests for `agentflow`, `tmux`, and `git`.
 
 Detailed guide:
 
 - [`docs/codex_plugin_install_update.md`](docs/codex_plugin_install_update.md)
 
-For personal installation, follow that document exactly. It covers:
-
-- copying plugins into `~/.codex/plugins/`
-- creating `~/.agents/plugins/marketplace.json`
-- restarting Codex and enabling `spec-workflow`, `tmux`, and `git`
-- installing custom agents with `bash scripts/install_codex_agents.sh`
-
 ## Plugins
 
-### spec-workflow
+### agentflow
 
-Spec-driven workflow: design docs, code review, and feedback loop.
+Agent collaboration loop: task → dispatch → evaluate → report → review → redo.
 
 | Skill | Purpose |
 |-------|---------|
-| `spec-workflow:spec-feature` | Generate feature design documents from discussions |
-| `spec-workflow:spec-change` | Generate change documents for refactoring/modifications |
-| `spec-workflow:spec-implement` | Send design document to a tmux pane for execution |
-| `spec-workflow:spec-review` | Review code against design documents |
-| `spec-workflow:spec-feedback` | Send execution results back to the task originator |
-| `spec-workflow:spec-handle-feedback` | Review code completion, check against original design, decide next steps |
-| `spec-workflow:spec-check-review` | Verify review document accuracy and fix code |
-| `spec-workflow:spec-fix-review` | Send review document to a tmux pane for verification and fix |
+| `agentflow:task` | Generate structured task documents (feature / change / task) |
+| `agentflow:dispatch` | Send task or fix instructions to a tmux pane for execution |
+| `agentflow:gate-evaluate` | Receiver-side input guard — evaluate incoming tasks before execution |
+| `agentflow:report` | Report execution results back to the sender |
+| `agentflow:gate-review` | Sender-side output guard — review work results, decide pass or redo |
 
 ### tmux
 
@@ -109,51 +95,54 @@ Git worktree and branching utilities.
 ### 1. Design Phase
 
 ```
-/spec-workflow:spec-feature <feature-name>   # or /spec-workflow:spec-change <change-name>
+/agentflow:task <task-name>
 ```
 
-Enter design discussion mode — discuss without writing code, generate document when ready.
+Enter design discussion mode — discuss without writing code, generate document when ready. Outputs to `docs/tasks/`.
 
-### 2. Implementation Phase
-
-```
-/spec-workflow:spec-implement <doc-path>
-```
-
-Send the design document to another agent's tmux pane. The receiving agent gets a `[task from ...]` labeled message with clear instructions and a feedback directive.
-
-### 3. Feedback Loop
-
-The implementer completes work and calls `spec-workflow:spec-feedback` to send results back:
+### 2. Dispatch Phase
 
 ```
-[feedback from Claude Code: implemented 3 tasks, pane_id: %5]
+/agentflow:dispatch [loop] <pane_id> <doc-path>
+```
+
+Send the task document to another agent's tmux pane. The receiving agent gets a `[task from ...]` labeled message. Add `loop` to enable automatic review-fix cycling.
+
+### 3. Execution & Report
+
+The receiver evaluates the task via `gate-evaluate`, executes, then calls `report` to send results back:
+
+```
+[report from Claude Code, pane_id: %5, loop: true: completed 3 tasks]
 ```
 
 ### 4. Review & Fix
 
-The originator receives feedback and `spec-workflow:spec-handle-feedback` triggers automatically:
+The sender receives the report and `gate-review` triggers:
 
-- Calls `spec-workflow:spec-review` to review the code
-- If issues found → sends fix tasks back via `spec-workflow:spec-implement` (up to 3 rounds)
+- Reviews work against original design
+- If `loop: true` + issues found → auto-dispatches fix instructions (up to 3 rounds)
+- If `loop: false` + issues found → outputs conclusions, user decides next step
 - If all passed → done
-
-```
-/spec-workflow:spec-fix-review <review-doc>   # Send review to another pane for fix
-```
 
 ## Message Protocol
 
 ### Task Dispatch
 
 ```
-[task from {agent-name}: {task-summary}, pane_id: {pane_id}]
+[task from {agent-name}, pane_id: {pane_id}, loop: {true|false}: {task-summary}]
 ```
 
-### Execution Feedback
+### Fix Dispatch
 
 ```
-[feedback from {agent-name}: {result-summary}, pane_id: {pane_id}]
+[fix from {agent-name}, pane_id: {pane_id}, loop: {true|false}: {fix-summary}]
+```
+
+### Execution Report
+
+```
+[report from {agent-name}, pane_id: {pane_id}, loop: {true|false}: {result-summary}]
 ```
 
 Agents use these tags to identify message types and route responses correctly.

@@ -1,0 +1,7 @@
+{
+  "name": "learning",
+  "description": "Personal learning note generation and management skills",
+  "version": "1.0.0",
+  "author": { "name": "finger" },
+  "license": "MIT"
+}

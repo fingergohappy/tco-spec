@@ -6,7 +6,7 @@
 
 1. 个人安装 `ai-kit` 的 Codex 插件
 2. 安装本仓库提供的 custom agents
-3. 让 `list skills` 能直接看到 `spec-*` / `tmux-send` / `commit` 等 skills
+3. 让 `list skills` 能直接看到 `task` / `dispatch` / `tmux-send` / `commit` 等 skills
 
 不要安装到项目级 `.codex/agents/`。  
 统一使用个人目录：
@@ -45,15 +45,15 @@ fi
 ### 3. 同步插件目录
 
 ```bash
-rm -rf ~/.codex/plugins/spec-workflow ~/.codex/plugins/tmux ~/.codex/plugins/git
-cp -R ~/.codex/plugins/ai-kit-repo/plugins/spec-workflow ~/.codex/plugins/spec-workflow
+rm -rf ~/.codex/plugins/agentflow ~/.codex/plugins/tmux ~/.codex/plugins/git
+cp -R ~/.codex/plugins/ai-kit-repo/plugins/agentflow ~/.codex/plugins/agentflow
 cp -R ~/.codex/plugins/ai-kit-repo/plugins/tmux ~/.codex/plugins/tmux
 cp -R ~/.codex/plugins/ai-kit-repo/plugins/git ~/.codex/plugins/git
 ```
 
 ### 4. 合并个人 marketplace 配置
 
-执行下面脚本。它会创建或更新 `~/.agents/plugins/marketplace.json`，保留其他已有插件条目，只替换 `spec-workflow`、`tmux`、`git` 这三个条目。
+执行下面脚本。它会创建或更新 `~/.agents/plugins/marketplace.json`，保留其他已有插件条目，只替换 `agentflow`、`tmux`、`git` 这三个条目。
 
 ```bash
 python3 - <<'PY'
@@ -82,10 +82,10 @@ payload.setdefault("plugins", [])
 
 entries = [
     {
-        "name": "spec-workflow",
+        "name": "agentflow",
         "source": {
             "source": "local",
-            "path": "./.codex/plugins/spec-workflow",
+            "path": "./.codex/plugins/agentflow",
         },
         "policy": {
             "installation": "AVAILABLE",
@@ -149,14 +149,11 @@ bash scripts/install_codex_agents.sh
 
 这样即使你还没在 Codex 的 Plugins 面板里真正点安装，`list skills` 也能直接看到：
 
-- `spec-feature`
-- `spec-change`
-- `spec-implement`
-- `spec-review`
-- `spec-feedback`
-- `spec-handle-feedback`
-- `spec-check-review`
-- `spec-fix-review`
+- `task`
+- `dispatch`
+- `gate-evaluate`
+- `report`
+- `gate-review`
 - `tmux-send`
 - `commit`
 - `rebase-to-root`
@@ -168,7 +165,7 @@ bash scripts/install_codex_agents.sh
 1. 重启 Codex
 2. 先运行 `list skills` 检查 skills 是否已出现
 3. 如果需要使用 Codex 的 Plugins 目录、`@plugin` 入口或插件安装界面，再在插件目录里启用或安装：
-   - `spec-workflow`
+   - `agentflow`
    - `tmux`
    - `git`
 
@@ -184,8 +181,8 @@ bash scripts/install_codex_agents.sh
 
 ```bash
 git -C ~/.codex/plugins/ai-kit-repo pull --ff-only
-rm -rf ~/.codex/plugins/spec-workflow ~/.codex/plugins/tmux ~/.codex/plugins/git
-cp -R ~/.codex/plugins/ai-kit-repo/plugins/spec-workflow ~/.codex/plugins/spec-workflow
+rm -rf ~/.codex/plugins/agentflow ~/.codex/plugins/tmux ~/.codex/plugins/git
+cp -R ~/.codex/plugins/ai-kit-repo/plugins/agentflow ~/.codex/plugins/agentflow
 cp -R ~/.codex/plugins/ai-kit-repo/plugins/tmux ~/.codex/plugins/tmux
 cp -R ~/.codex/plugins/ai-kit-repo/plugins/git ~/.codex/plugins/git
 cd ~/.codex/plugins/ai-kit-repo
@@ -195,10 +192,10 @@ bash scripts/install_codex_agents.sh
 然后告诉用户：
 
 1. 重启 Codex
-2. 先用 `list skills` 确认 `spec-feature` 等 skill 已刷新
+2. 先用 `list skills` 确认 `task` 等 skill 已刷新
 3. 如果插件内容还是旧的，禁用并重新启用对应插件
 4. 如果还不生效，卸载后重新安装对应插件
-5. 如果 `readlink ~/.agents/skills/spec-feature` 仍指向 `.../codex-skills/...`，再执行一次 `bash scripts/install_codex_agents.sh` 刷新 skill 链接目标
+5. 如果 `readlink ~/.agents/skills/task` 仍指向 `.../codex-skills/...`，再执行一次 `bash scripts/install_codex_agents.sh` 刷新 skill 链接目标
 
 ## 验证
 
@@ -206,31 +203,31 @@ bash scripts/install_codex_agents.sh
 
 ```bash
 test -f ~/.agents/plugins/marketplace.json
-test -f ~/.codex/plugins/spec-workflow/.codex-plugin/plugin.json
+test -f ~/.codex/plugins/agentflow/.codex-plugin/plugin.json
 test -f ~/.codex/plugins/tmux/.codex-plugin/plugin.json
 test -f ~/.codex/plugins/git/.codex-plugin/plugin.json
-grep -q '"skills": "./skills/"' ~/.codex/plugins/spec-workflow/.codex-plugin/plugin.json
+grep -q '"skills": "./skills/"' ~/.codex/plugins/agentflow/.codex-plugin/plugin.json
 grep -q '"skills": "./skills/"' ~/.codex/plugins/tmux/.codex-plugin/plugin.json
 grep -q '"skills": "./skills/"' ~/.codex/plugins/git/.codex-plugin/plugin.json
-test -d ~/.codex/plugins/spec-workflow/skills
+test -d ~/.codex/plugins/agentflow/skills
 test -d ~/.codex/plugins/tmux/skills
 test -d ~/.codex/plugins/git/skills
 test -f ~/.codex/agents/git-operator.toml
 test -f ~/.codex/agents/tmux-operator.toml
-test -d ~/.agents/skills/spec-feature
+test -d ~/.agents/skills/task
 test -d ~/.agents/skills/tmux-send
 test -d ~/.agents/skills/commit
 ```
 
 安装完成后：
 
-- `list skills` 应该能看到 `spec-feature` / `tmux-send` / `commit` 等 skill
+- `list skills` 应该能看到 `task` / `tmux-send` / `commit` 等 skill
 - prompt 中可直接显式调用：
-  - `$spec-feature`
-  - `$spec-review`
+  - `$task`
+  - `$dispatch`
   - `$tmux-send`
   - `$commit`
 - 如果插件也在 Codex Plugins UI 中完成了 install/enable，则插件命名空间应为：
-  - `spec-workflow:*`
+  - `agentflow:*`
   - `tmux:*`
   - `git:*`

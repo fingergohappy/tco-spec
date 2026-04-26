@@ -16,16 +16,19 @@ if ! tmux list-panes -t "$PANE_ID" >/dev/null 2>&1; then
   exit 1
 fi
 
-# If content is a file path, read from file; otherwise use as-is
+# Resolve sender pane id
+SENDER_PANE="${TMUX_PANE:-unknown}"
+
+# Resolve body: file path → read file, otherwise use as-is
 if [[ "$CONTENT" =~ ^/ ]] || [[ "$CONTENT" =~ ^\./ ]]; then
-  if [[ ! -f "$CONTENT" ]]; then
-    echo "Error: file $CONTENT not found" >&2
-    exit 1
-  fi
-  tmux load-buffer "$CONTENT"
+  [[ ! -f "$CONTENT" ]] && { echo "Error: file $CONTENT not found" >&2; exit 1; }
+  BODY=$(cat "$CONTENT")
 else
-  tmux load-buffer - <<< "$CONTENT"
+  BODY="$CONTENT"
 fi
+
+tmux load-buffer - <<< "${BODY}
+[msg from tmux pane_id ${SENDER_PANE}]"
 
 # Paste content to pane (must be separate from send-keys)
 tmux paste-buffer -p -r -t "$PANE_ID"

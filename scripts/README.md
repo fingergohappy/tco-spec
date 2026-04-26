@@ -41,7 +41,7 @@ Installs generated Codex custom agents into `~/.codex/agents/` by calling the
 converter script with the repository defaults.
 
 It also creates symlinks for plugin skills under `~/.agents/skills/` by default,
-so `list skills` and `$spec-feature`-style invocation work even when the plugin
+so `list skills` and `$task`-style invocation work even when the plugin
 directory UI has not been used to install the plugin yet.
 
 Examples:
