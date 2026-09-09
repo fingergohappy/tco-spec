@@ -25,6 +25,7 @@
 """
 import argparse
 import datetime as _dt
+import glob
 import os
 import re
 import shutil
@@ -497,6 +498,73 @@ def cmd_new_draft(args):
     print("已建草稿:", path)
 
 
+# 项目自己的 PR 模板. 只列确定的路径 -- CLAUDE.md / AGENTS.md 里用自然语言指的那种,
+# 脚本认不出来, 由 skill 让 agent 去看 (见 implement-cr 段 B).
+PR_TEMPLATE_PATHS = (
+    os.path.join(".github", "pull_request_template.md"),
+    os.path.join(".github", "PULL_REQUEST_TEMPLATE.md"),
+    os.path.join("docs", "pull_request_template.md"),
+    "pull_request_template.md",
+)
+PR_TEMPLATE_GLOBS = (
+    os.path.join(".github", "PULL_REQUEST_TEMPLATE", "*.md"),
+    os.path.join("docs", "**", "pr-template*.md"),
+    os.path.join("docs", "**", "pull-request*.md"),
+)
+# 没有模板的仓库用这个兜底: 就是 ship-pr 那张 ops 表的六行
+FALLBACK_RELEASE = """## 上线事实
+
+<!-- 本仓库没有 PR 模板, 这是通用清单. 项目有自己的模板时, 这份文件就是那个模板的副本. -->
+
+- **环境变量**: 名字, 有没有默认值, 不设会怎样, 生产值
+- **迁移**: 版本号, 做了什么, 锁不锁表, 上一版 binary 能不能跑新 schema, down 能不能真回滚
+- **回填 / 手工 SQL**: 什么时候跑, 幂等吗, 跑第二遍会怎样
+- **新依赖 / 外部服务**: 要开通什么, 哪些凭据, 哪些网络访问
+- **开关**: 部署时开还是关, 谁来翻, 怎么回退
+- **顺序**: 上面几项之间的先后
+
+## 验证
+
+<!-- 跑过的命令与它最后一行输出. 没跑的写 "未跑: <原因>". -->
+"""
+
+
+def find_pr_template(repo_root):
+    """项目自己的 PR 模板路径; 没有返回 None."""
+    for rel_path in PR_TEMPLATE_PATHS:
+        cand = os.path.join(repo_root, rel_path)
+        if os.path.isfile(cand):
+            return cand
+    for pat in PR_TEMPLATE_GLOBS:
+        hits = sorted(glob.glob(os.path.join(repo_root, pat), recursive=True))
+        if hits:
+            return hits[0]
+    return None
+
+
+def write_release(root, d, cr_id):
+    """release.md: 项目有 PR 模板就整份复制过来 -- 骨架即模板, 实施时只往里填事实.
+
+    不覆盖已有的: 那里面是一路攒下来的事实.
+    """
+    path = os.path.join(d, "release.md")
+    if os.path.exists(path):
+        return path, "existing"
+    repo_root = os.path.dirname(os.path.dirname(root))
+    tmpl = find_pr_template(repo_root)
+    if not tmpl:
+        write(path, "<!-- %s 的上线事实, 实施当中逐条记, 开 PR 时贴进正文. -->\n\n%s"
+                    % (cr_id, FALLBACK_RELEASE))
+        return path, None
+    rel_tmpl = os.path.relpath(tmpl, repo_root)
+    head = ("<!-- %s 的上线事实. 复制自 %s (%s): 照它的节填, 开 PR 时整份贴进正文.\n"
+            "     贴之前把 HTML 注释和没替换的占位符删干净 -- 模板自己也这么要求.\n"
+            "     模板可能已经更新, 开 PR 前对一眼源文件. -->\n\n"
+            % (cr_id, rel_tmpl, today()))
+    write(path, head + read(tmpl))
+    return path, rel_tmpl
+
+
 def cmd_new_spec(args):
     root = need_root(args)
     cr = find_cr(root, args.cr)
@@ -513,6 +581,13 @@ def cmd_new_spec(args):
                                   "BASE": git_head(os.path.dirname(os.path.dirname(root))),
                                   "TITLE": h1(read(cr["path"])) or cr["slug"]}))
     print("已建 spec:", path)
+    rpath, src = write_release(root, d, cr["id"])
+    if src == "existing":
+        print("release 已存在, 未动:", rpath)
+    elif src:
+        print("已建 release (上线事实): %s  <- 整份复制自 %s" % (rpath, src))
+    else:
+        print("已建 release (上线事实): %s  (本仓库没有 PR 模板, 用了通用清单)" % rpath)
 
 
 def cmd_new_review(args):
