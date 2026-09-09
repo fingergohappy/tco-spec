@@ -1,7 +1,7 @@
 ---
 name: create-cr
 description: >-
-  立一次工作单元 CR-NNN (docs/sdd/cr/) 并建好 notcommit/CR-NNN-<slug>/ 工作目录: 已有 REQ 的业务改行为写变更 CR (按 FR-x / BR-y / AC-z 逐条 "现行 -> 变更后"), 全新业务写立项 CR (立项动机 / 交付范围 / 对现有系统的影响). 当用户说 "改 XX 的行为", "加一个功能 / 开关 / 配置", "做一个新业务 / 新功能 / 从零做个 XX", "立个 CR / 变更 / 需求变更", "把草稿变成变更" 时使用 -- 只要验收标准会变或要新做一个业务就走这里. 不写代码, 不改 REQ (落实时才改).
+  立一次工作单元 CR-NNN (docs/sdd/cr/) 并建好 work/CR-NNN-<slug>/ 工作目录: 已有 REQ 的业务改行为写变更 CR (按 FR-x / BR-y / AC-z 逐条 "现行 -> 变更后"), 全新业务写立项 CR (立项动机 / 交付范围 / 对现有系统的影响). 当用户说 "改 XX 的行为", "加一个功能 / 开关 / 配置", "做一个新业务 / 新功能 / 从零做个 XX", "立个 CR / 变更 / 需求变更", "把草稿变成变更" 时使用 -- 只要验收标准会变或要新做一个业务就走这里. 不写代码, 不改 REQ (落实时才改).
 ---
 
 # /create-cr: 立一次工作单元
@@ -32,13 +32,13 @@ CR 是一次带来 REQ 变化的工作单元: spec 与三次 review 都挂在它
    - **有但还是 draft**: 说明上一次立项还没落实完. 别新建 CR, 接着做那个 (`sdd.py status CR-NNN`).
 
    任何一种都不立没有目标 REQ 的 CR.
-3. **读草稿**. `docs/sdd/notcommit/<slug>/draft/` 有东西就全读 (从磁盘), 那是 `/draft` `/req` 留下的
+3. **读草稿**. `docs/sdd/draft/<slug>/` 有东西就全读 (从磁盘), 那是 `/draft` `/req` 留下的
    事实与选项. 没有草稿而改动不小 (跨表, 改状态机, 有资金含义) 时, 先做一轮只读侦察, 关键事实
    file:line 记到草稿 (`sdd.py new-draft <slug> cr-recon`), 再写 CR.
 4. **核实 "现行"**. 变更内容表的 "现行" 列必须与 REQ 原文一致 (review 车道 B 逐字核), 并且
    与代码一致 (车道 A 核) -- REQ 与代码不一致的, 先在 CR 动机里说明, 不要以其中一方为准悄悄写.
 5. **建文件**: 变更形态 `sdd.py new-cr <slug> "<标题>"`; 新增形态 `sdd.py new-cr <slug> "<标题>" --new`.
-   脚本分配编号, 按形态选模板, 建 `notcommit/CR-NNN-<slug>/`, 并把 `notcommit/<slug>/` 草稿并进去.
+   脚本分配编号, 按形态选模板, 把 `draft/<slug>/` 整个升格成工作目录 `work/CR-NNN-<slug>/`.
 6a. **变更形态按模板写** (`../sdd/assets/templates/cr.md`):
    - 影响需求精确到条目号, 用链接 `[REQ-006](../req/REQ-006-xxx.md) (FR-8, AC-8)`.
    - 变更内容: 一行一个条目, "现行 -> 变更后"; 新增标 "(新增)" 且新增 FR 必带新增 AC;

@@ -7,7 +7,7 @@
 
 | OpenSpec | 这里 | 说明 |
 |---|---|---|
-| 一个变更一个文件夹 | `notcommit/CR-NNN-<slug>/` | 草稿, spec, 三次 review 同处, 不散落 |
+| 一个变更一个文件夹 | `work/CR-NNN-<slug>/` | 草稿, spec, 三次 review 同处, 不散落 |
 | `openspec status` / `instructions --json`: 由文件状态推下一步 | `sdd.py status CR-NNN` 的 "下一步"; `/implement-cr` 按状态决定做什么 | 状态在文件里, 不在记忆里 |
 | `openspec validate --strict` | `sdd.py validate` | 条目引用存在性, CR fixed 的三件事, review fixed 无未处置, 链接可解析, INDEX 过期 |
 | `openspec list` | `sdd.py index` 生成 INDEX.md | 索引是生成物, 消掉一处手工同步 |

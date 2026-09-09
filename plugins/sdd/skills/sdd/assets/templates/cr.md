@@ -60,7 +60,7 @@ summary: >-
 <!-- 由 /implement-cr 逐步填写. CR 置 fixed 的条件: 三次 review 都 fixed, REQ 正文已更新到
      新结论, REQ 变更记录已追加指回本 CR 的行, 代码与 REQ 更新在同一分支. -->
 
-- 实施 spec: notcommit/{{ID}}-{{SLUG}}/spec.md
+- 实施 spec: work/{{ID}}-{{SLUG}}/spec.md
 - review: docs - / spec - / impl -   <!-- 各自的状态与结论, 如 "docs fixed (原 BLOCK, 3 条已修)" -->
 - 实现提交:
 - REQ 更新提交:

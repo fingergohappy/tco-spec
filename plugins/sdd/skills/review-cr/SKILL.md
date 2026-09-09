@@ -1,7 +1,7 @@
 ---
 name: review-cr
 description: >-
-  对一个变更 CR-NNN 做三次 review 之一: docs (CR + REQ delta, 写 spec 前), spec (实施计划, 写代码前), impl (代码 vs spec vs AC, 落实前); 或对已处置的发现做复核. 按车道审, 每条发现带 file:line 证据与最小修复, 写进 notcommit/CR-NNN-<slug>/reviews/0N-<stage>.md, 状态 to fix / fixing / fixed. CR fixed 后用 distill 模式把 review 里犯过的错提炼进入库的错题本 docs/sdd/lessons.md, 再盘点工作目录 (草稿, spec, review 都是过程产物), 与用户确认后删除. 当用户说 "review / 审一下 / 复审 / 检查这个 CR / spec / 实现", "看看有没有问题", "并行审这个 CR / 派给 codex 审", "提炼 / 总结 review 的教训 / 清理 review", 或 sdd status 的下一步指向 review 或 distill 时使用. 不改代码.
+  对一个变更 CR-NNN 做三次 review 之一: docs (CR + REQ delta, 写 spec 前), spec (实施计划, 写代码前), impl (代码 vs spec vs AC, 落实前); 或对已处置的发现做复核. 按车道审, 每条发现带 file:line 证据与最小修复, 写进 work/CR-NNN-<slug>/reviews/0N-<stage>.md, 状态 to fix / fixing / fixed. CR fixed 后用 distill 模式把 review 里犯过的错提炼进入库的错题本 docs/sdd/lessons.md, 再盘点工作目录 (草稿, spec, review 都是过程产物), 与用户确认后删除. 当用户说 "review / 审一下 / 复审 / 检查这个 CR / spec / 实现", "看看有没有问题", "并行审这个 CR / 派给 codex 审", "提炼 / 总结 review 的教训 / 清理 review", 或 sdd status 的下一步指向 review 或 distill 时使用. 不改代码.
 ---
 
 # /review-cr: 三次 review
@@ -67,6 +67,9 @@ review 是这套流程里真正拦住问题的环节: 文档错了在 docs 阶�
 
    窗口意外没了 (被关掉, 或环境变了) 就自己复核, 在汇报里说明这一轮的复核是自审的.
 7. **汇报**: 结论, P0 列表 (编号 + 一句话), 下一步 (`/implement-cr CR-NNN` 处理 / 或进入下一阶段).
+   **被授权推进时** (用户说过 "推进到 X" / "一路做到 X" / "别问我"), 汇报完**不要停** -- 七步走完
+   不等于任务完成, 按那个 "下一步" 直接做下去 (照 `../sdd/references/conventions.md` 的
+   `### 被授权推进时, 做完一段接着做下一段`). 审出 34 条发现更要继续: 那正是要拿去处置的东西.
 
 ## 并行审 (一个车道一个窗口)
 
@@ -116,7 +119,7 @@ tmux list-panes -t agents:codex-CR-NNN-<stage>-A -F '#{pane_id}'
 - 审哪个车道: 车道名 + review-lanes.md 里那一行原文 (对方读不到你的上下文), 并写明
   **只审这一个车道**, 别的角度留给别的窗口
 - 错题本: `docs/sdd/lessons.md` 的绝对路径, 本车道且次数 >= 2 的行当硬性检查项
-- 写哪里: `notcommit/CR-NNN-<slug>/reviews/0N-<stage>-<车道字母>.md` -- 按车道命名, 一个窗口一个文件,
+- 写哪里: `work/CR-NNN-<slug>/reviews/0N-<stage>-<车道字母>.md` -- 按车道命名, 一个窗口一个文件,
   绝不让两个窗口写同一个文件. 格式照 `../sdd/assets/templates/review.md`, 发现编号在自己文件里从 1 编起
 - 边界: **只读, 不改任何代码与文档**; CR / REQ 里已写明的业务决策当既定前提, 不同意也不报成发现
   (那是用户拍过板的, 你读不到那次讨论), 有意见写进自己文件的 "附"
@@ -154,7 +157,7 @@ tmux list-panes -t agents:codex-CR-NNN-<stage>-A -F '#{pane_id}'
 ## 提炼模式 (`/review-cr CR-NNN distill`)
 
 review 是过程产物, 留着只会越积越多; 值得长期保存的是 "犯过什么错". CR fixed 之后把它提炼进错题本, 然后连同
-草稿与 spec 一起删掉 -- notcommit 下的三样都是过程产物, 结论该在的地方是 CR 与 REQ.
+草稿与 spec 一起删掉 -- `work/` 下的三样都是过程产物, 结论该在的地方是 CR 与 REQ.
 删除不可逆, 所以第 6 步是盘点完问用户, 不是一刀切.
 `sdd.py status CR-NNN` 在 CR fixed 且 review 未提炼时会把下一步指到这里.
 
@@ -169,7 +172,7 @@ review 是过程产物, 留着只会越积越多; 值得长期保存的是 "犯�
 5. **回填**: 每份 review 的 frontmatter 把 `distilled: false` 改成 `distilled: [L-3, L-4]`, 或者
    `distilled: "无可提炼: 理由"` (含 `": "` 必须加引号). CR 不动 -- 它是业务文档, 工程教训不进去;
    反查靠 lessons.md 的 "来源" 列 (grep `CR-NNN`).
-6. **盘点, 问, 再删**: 删除不可逆 -- `notcommit/` 整体 gitignore, 那些文件从没进过版本库, git 恢复不了.
+6. **盘点, 问, 再删**: 删了就不再回来 -- 已提交过的还能从 git 历史里翻, 没提交过的翻不回来.
    所以不一刀切, 三小步:
 
    **6a 盘点**: `sdd.py prune CR-NNN --dry-run` 拿到清单, 然后**逐份读一遍**, 核实每样东西的内容
@@ -177,7 +180,7 @@ review 是过程产物, 留着只会越积越多; 值得长期保存的是 "犯�
 
    | 文件 | 内容去向 | 建议 |
    |---|---|---|
-   | `draft/*.md` | 结论进了 CR 第 1 / 4 节; docs review 车道 A 已拿它核过现状 | 删 |
+   | `<日期>-<主题>.md` (草稿) | 结论进了 CR 第 1 / 4 节; docs review 车道 A 已拿它核过现状 | 删 |
    | `spec.md` | 分步落点 (提交 hash) 已填进 CR 第 5 节 | 删; 上线检查单没走完则留 |
    | `reviews/0N-*.md` | 教训已提炼成 L-x 进 lessons.md | 删 |
 

@@ -23,7 +23,7 @@ description: >-
    每关后面跟的是文件里读出来的证据 (文件名 + frontmatter 状态 + 未处置发现数 + 已填 hash 的步数).
 3. 用户要查一致性: `sdd.py validate` (有错退出码 1, 可挂 CI). 逐条解释输出, 错误先于警告.
 4. 用户要更新索引: `sdd.py index`. INDEX.md 是生成物, 手改会被覆盖.
-5. `docs/sdd` 不存在时: 先问是否初始化 (`sdd.py init` 会建目录, INDEX, 和 notcommit 的 .gitignore;
+5. `docs/sdd` 不存在时: 先问是否初始化 (`sdd.py init` 会建目录和 INDEX;
    不生成 README, 约定只在本 skill), 不要在用户没确认的情况下往仓库里加目录.
 
 把 `status` 的 "下一步" 原样告诉用户 -- 它是由文件状态推出来的, 比记忆可靠.
@@ -44,7 +44,7 @@ spec §4 表里填没填提交 hash), 不是 agent 自述. 所以换个会话接
   整套体系靠条目号互相引用, 重排一次全断.
 - **CR 必须挂在具体条目上**. 变更 CR 的影响需求精确到 FR-x / BR-y / AC-z, 新增 FR 必带新增 AC;
   全新业务用立项 CR (`new-cr --new`), 挂在新建的 draft REQ 上, 交付范围通常是全文.
-- **notcommit 不入库, 且跨文档引用不写它的路径**. 引用 review 写 `CR-NNN D-2`.
+- **跨文档引用不写工作目录的路径**. 引用 review 写 `CR-NNN D-2` -- `work/` 提炼后整个删掉, 路径会失效.
 - **review 是软闸门**. 下一阶段发现上一阶段 review 缺失或未 fixed 时, 停下来说明; 只有
   用户明确说 "跳过" 才继续.
 - **落点填提交 hash 不填勾**. 提交可验证, 勾是自述.

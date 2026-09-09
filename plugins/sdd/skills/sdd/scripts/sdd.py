@@ -6,13 +6,13 @@
 文档根默认 docs/sdd (从当前目录向上查找), 可用 --root 或环境变量 SDD_ROOT 覆盖.
 
 子命令:
-  init                    建目录 + INDEX + notcommit/.gitignore (约定只在 skill 里, 不放 README)
+  init                    建目录 + INDEX (约定只在 skill 里, 不放 README)
   status [CR-NNN] [--write]  全局状态; 给 CR 时输出 8 关的进度表 (每关带文件证据) 与下一步;
                           --write 另把这份表写进工作目录的 PROGRESS.md
   next-id REQ|CR          下一个可用编号
   new-req <slug> [标题]    从模板建 REQ
   new-cr <slug> [标题] [--new]   从模板建 CR (--new: 新增业务的立项 CR; 不带则是变更 CR).
-                          同时把草稿目录 notcommit/<slug> 改名为 CR 目录
+                          同时把草稿目录 draft/<slug> 移成工作目录 work/CR-NNN-<slug>
   new-draft <slug|CR-NNN> <topic>   建草稿文件
   new-spec <CR-NNN>       从模板建实施 spec
   new-review <CR-NNN> docs|spec|impl   从模板建 review
@@ -20,7 +20,7 @@
   index                   重新生成 INDEX.md
   lessons [--init] [--next-id]   错题本 docs/sdd/lessons.md: 摘要 / 建文件 / 下一个 L 编号
   prune <CR-NNN> [--dry-run] [--keep draft|spec|reviews]
-                          删除 CR 工作目录里的 draft/ spec.md reviews/ (--keep 逐项保留);
+                          删除 CR 工作目录里的草稿 spec.md reviews/ (--keep 逐项保留);
                           CR fixed, 各 review fixed 且头部 "提炼" 已填, 才删
 """
 import argparse
@@ -43,6 +43,9 @@ STAGE_FILE = {"docs": "01-docs.md", "spec": "02-spec.md", "impl": "03-impl.md"}
 STAGE_PREFIX = {"docs": "D", "spec": "S", "impl": "I"}
 SLUG_RE = re.compile(r"^[a-z0-9]+(-[a-z0-9]+)*$")
 ID_RE = re.compile(r"^(REQ|CR)-(\d{3,})-([a-z0-9-]+)\.md$")
+# 指向草稿 / 工作目录的相对链接: 草稿会并入工作目录, 工作目录提炼后整个删掉,
+# 断链是预期内的, 只警告不报错
+TRANSIENT_LINK_RE = re.compile(r"(?:^|/)(?:draft|work)/")
 
 
 # ---------- 基础 ----------
@@ -275,8 +278,8 @@ def next_id(root, kind):
 
 
 def cr_dir(root, cr_id):
-    """notcommit/CR-NNN-<slug>/ ; 不存在返回 None."""
-    nc = os.path.join(root, "notcommit")
+    """work/CR-NNN-<slug>/ ; 不存在返回 None."""
+    nc = os.path.join(root, "work")
     if not os.path.isdir(nc):
         return None
     for fn in os.listdir(nc):
@@ -411,12 +414,8 @@ def spec_steps(path):
 
 def cmd_init(args):
     base = os.path.abspath(args.root or os.path.join(os.getcwd(), "docs", "sdd"))
-    for sub in ("req", "cr", "notcommit"):
+    for sub in ("req", "cr", "draft", "work"):
         os.makedirs(os.path.join(base, sub), exist_ok=True)
-    gi = os.path.join(base, "notcommit", ".gitignore")
-    if not os.path.exists(gi):
-        write(gi, "# 本目录不入库: 草稿, 实施 spec, review 都是与某次 CR 配对的工作文件\n*\n!.gitignore\n")
-        print("已建", gi, "(notcommit 整体忽略)")
     write_index(base)
     print("完成. 目录:", base)
 
@@ -441,7 +440,7 @@ def cmd_new_req(args):
     path = os.path.join(root, "req", "%s-%s.md" % (rid, args.slug))
     write(path, fill("req.md", {"ID": rid, "SLUG": args.slug, "DATE": today(),
                                  "TITLE": args.title or args.slug}))
-    draft_dir = os.path.join(root, "notcommit", args.slug, "draft")
+    draft_dir = os.path.join(root, "draft", args.slug)
     os.makedirs(draft_dir, exist_ok=True)
     print("已建 REQ:", path)
     print("侦察记录放:", draft_dir)
@@ -456,9 +455,8 @@ def cmd_new_cr(args):
     tmpl = "cr-new.md" if args.new else "cr.md"
     write(path, fill(tmpl, {"ID": cid, "SLUG": args.slug, "DATE": today(),
                              "TITLE": args.title or args.slug}))
-    nc = os.path.join(root, "notcommit")
-    target = os.path.join(nc, "%s-%s" % (cid, args.slug))
-    old = os.path.join(nc, args.slug)
+    target = os.path.join(root, "work", "%s-%s" % (cid, args.slug))
+    old = os.path.join(root, "draft", args.slug)
     if os.path.isdir(old):
         if os.path.exists(target):
             # 合并: 把旧目录内容搬过去
@@ -467,9 +465,8 @@ def cmd_new_cr(args):
             os.rmdir(old)
         else:
             os.rename(old, target)
-        print("草稿目录已并入:", target)
-    for sub in ("draft", "reviews"):
-        os.makedirs(os.path.join(target, sub), exist_ok=True)
+        print("草稿已升格为工作目录:", target)
+    os.makedirs(os.path.join(target, "reviews"), exist_ok=True)
     print("已建 CR (%s):" % ("新增业务立项" if args.new else "变更"), path)
     print("工作目录:", target)
     write_index(root)
@@ -481,18 +478,19 @@ def cmd_new_draft(args):
     if CR_REF_RE.fullmatch(key):
         d = cr_dir(root, key)
         if not d:
-            die("找不到 %s 的工作目录 (notcommit/%s-*)" % (key, key))
+            die("找不到 %s 的工作目录 (work/%s-*)" % (key, key))
     else:
         check_slug(key)
         d = None
-        nc = os.path.join(root, "notcommit")
-        if os.path.isdir(nc):
-            for fn in os.listdir(nc):
+        wk = os.path.join(root, "work")
+        if os.path.isdir(wk):
+            # 这个 slug 已经立了 CR: 草稿直接进工作目录, 不再落 draft/
+            for fn in os.listdir(wk):
                 if re.match(r"^CR-\d+-%s$" % re.escape(key), fn):
-                    d = os.path.join(nc, fn)
-        d = d or os.path.join(nc, key)
+                    d = os.path.join(wk, fn)
+        d = d or os.path.join(root, "draft", key)
     topic = re.sub(r"[^a-z0-9-]+", "-", args.topic.lower()).strip("-") or "draft"
-    path = os.path.join(d, "draft", "%s-%s.md" % (today(), topic))
+    path = os.path.join(d, "%s-%s.md" % (today(), topic))
     if os.path.exists(path):
         die("已存在: %s" % path)
     write(path, fill("draft.md", {"DATE": today(), "TOPIC": args.topic, "KEY": key}))
@@ -506,9 +504,8 @@ def cmd_new_spec(args):
         die("没有这个 CR: %s" % args.cr)
     d = cr_dir(root, args.cr)
     if not d:
-        d = os.path.join(root, "notcommit", "%s-%s" % (cr["id"], cr["slug"]))
+        d = os.path.join(root, "work", "%s-%s" % (cr["id"], cr["slug"]))
         os.makedirs(os.path.join(d, "reviews"), exist_ok=True)
-        os.makedirs(os.path.join(d, "draft"), exist_ok=True)
     path = os.path.join(d, "spec.md")
     if os.path.exists(path) and not args.force:
         die("spec 已存在: %s (加 --force 覆盖)" % path)
@@ -733,7 +730,7 @@ def render_cr_status(root, cr, st=None):
 def write_progress(root, cr, st=None):
     """把进度表落进 CR 工作目录, 供人随时翻 (不必问 agent, 也不必自己跑脚本).
 
-    生成物, 不是勾: 每次由 cr_state 重算覆写. notcommit 下不入库, prune 会清掉.
+    生成物, 不是勾: 每次由 cr_state 重算覆写. prune 会清掉.
     """
     st = st or cr_state(root, cr)
     if not st["dir"]:
@@ -871,7 +868,7 @@ def cmd_validate(args):
         if p["status"] == "fixed":
             for stage in STAGES:
                 if stage not in st["reviews"]:
-                    warns.append("%s: 已 fixed 但本机没有 %s review (notcommit 不入库, 换机器会看不到)" % (rel(d["path"]), stage))
+                    warns.append("%s: 已 fixed 但没有 %s review (提炼后已删除, 或当时跳过了)" % (rel(d["path"]), stage))
                 elif st["reviews"][stage]["status"] != "fixed":
                     errors.append("%s: 已 fixed 但 %s review 状态是 %s" % (rel(d["path"]), stage, st["reviews"][stage]["status"]))
 
@@ -882,7 +879,7 @@ def cmd_validate(args):
             for m in re.finditer(r"\]\(([^)#\s]+\.md)(?:#[^)]*)?\)", t):
                 target = os.path.normpath(os.path.join(os.path.dirname(d["path"]), m.group(1)))
                 if not os.path.exists(target):
-                    (warns if "notcommit" in m.group(1) else errors).append(
+                    (warns if TRANSIENT_LINK_RE.search(m.group(1)) else errors).append(
                         "%s: 链接不可解析: %s" % (rel(d["path"]), m.group(1)))
 
     # INDEX 是否过期
@@ -996,11 +993,13 @@ def cmd_prune(args):
         problems.append("reviews/ 里没有 0N-<stage>.md (只有原件?), 请先按规范提炼")
     if problems:
         die("不能删:\n  - " + "\n  - ".join(problems))
-    # 默认三样全删; --keep 逐项保留 (删除不可逆, notcommit 不入库, git 恢复不了).
+    # 默认三样全删; --keep 逐项保留 (删除不可逆, 没提交过的改动 git 也恢复不了).
     keep = set(args.keep or ())
     targets = []
-    if "draft" not in keep and os.path.isdir(os.path.join(d, "draft")):
-        targets.append((os.path.join(d, "draft"), True))
+    if "draft" not in keep:
+        for fn in sorted(os.listdir(d)):
+            if fn.endswith(".md") and fn not in ("spec.md", PROGRESS_FILE):
+                targets.append((os.path.join(d, fn), False))
     if "spec" not in keep and os.path.isfile(os.path.join(d, "spec.md")):
         targets.append((os.path.join(d, "spec.md"), False))
     if "reviews" not in keep and os.path.isdir(rdir):

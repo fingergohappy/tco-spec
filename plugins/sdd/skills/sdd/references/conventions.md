@@ -14,15 +14,14 @@ docs/sdd/
 ├── lessons.md                # 错题本: 从已 fixed 的 review 提炼的模式 (入库, 长期)
 ├── req/REQ-NNN-<slug>.md     # 业务逻辑: 当前功能的结论 (入库)
 ├── cr/CR-NNN-<slug>.md       # 一次工作单元 (入库): 变更 CR 写改哪些条目, 立项 CR 写新业务交付什么
-└── notcommit/                # 不入库 (整体 .gitignore)
-    ├── <slug>/draft/         # 还没立 CR 时的草稿 / 侦察记录
-    └── CR-NNN-<slug>/        # 立 CR 后的工作目录 (草稿目录自动并入)
-        ├── draft/            # 提案 / 变更草稿
-        ├── spec.md           # 实施 spec: 改哪里, 按什么顺序, 怎么测, 怎么上线
-        └── reviews/          # 三次 review (CR fixed 后提炼进 lessons.md, 然后删除)
-            ├── 01-docs.md    #   CR + REQ delta (写 spec 之前)
-            ├── 02-spec.md    #   实施 spec (写代码之前)
-            └── 03-impl.md    #   实现 (落实 REQ 之前)
+├── draft/<slug>/*.md         # 还没立 CR 的草稿 / 侦察记录 (入库; 立 CR 时整个升格进 work/)
+└── work/CR-NNN-<slug>/       # 立了 CR 之后, 一个变更一个文件夹 (入库)
+    ├── <日期>-<主题>.md      # 草稿 / 侦察, 与 spec review 平级 (从 draft/<slug>/ 并进来)
+    ├── spec.md               # 实施 spec: 改哪里, 按什么顺序, 怎么测, 怎么上线
+    └── reviews/              # 三次 review (CR fixed 后提炼进 lessons.md, 然后删除)
+        ├── 01-docs.md        #   CR + REQ delta (写 spec 之前)
+        ├── 02-spec.md        #   实施 spec (写代码之前)
+        └── 03-impl.md        #   实现 (落实 REQ 之前)
 ```
 
 ## 三份文档各写什么
@@ -85,7 +84,7 @@ summary: >-
   **条目号一旦发布不重排**: 内容改了 FR-5 仍叫 FR-5, 删除保留编号并标 "已删除, 见 CR-NNN",
   新增续编当前最大号. CR 与 review 都按条目号引用, 编号稳定是整套体系能互相引用的前提.
 - review 内发现: `D-n` (docs) / `S-n` (spec) / `I-n` (impl), 一个 CR 内唯一.
-  跨文档引用写 `CR-005 I-3`, 不写路径 (notcommit 不入库, 路径在别的机器上不成立).
+  跨文档引用写 `CR-005 I-3`, 不写路径 (草稿会升格换路径, 工作目录提炼后整个删掉, 写死的路径会失效).
 - 引用其它 REQ 连条目号一起写 ("REQ-002 BR-17"), 不写 "见汇出需求".
 
 ## 状态
@@ -101,9 +100,9 @@ review: to fix -> fixing -> fixed -> (CR fixed 后) 提炼进 lessons.md -> 删�
 - review `fixed` 的含义是每条发现都有处置 (修复 <提交> / 接受风险 <理由> / 不采纳 <理由>),
   不是 "都修了". 接受与不采纳必须有理由, 复核人可以推翻.
 - 时间锚点是代码库不是上线: REQ 更新与实现同分支同提交, 合并瞬间文档与代码一致.
-- notcommit 的工作目录不长期保存: CR fixed 后 `/review-cr CR-NNN distill` 把处置为 "修复" 的发现归并成模式写进
+- 工作目录不长期保存: CR fixed 后 `/review-cr CR-NNN distill` 把处置为 "修复" 的发现归并成模式写进
   `lessons.md` (同模式只累加次数), review 的 `distilled` 填上 L 编号, 再盘点 `CR-NNN-<slug>/` 里的
-  draft/ spec.md reviews/, **与用户确认哪些删**, 用 `sdd.py prune` 执行 (`--keep` 保留某项). 三样都是过程产物: 草稿在 docs review 里已被当证据核过
+  草稿 spec.md reviews/, **与用户确认哪些删**, 用 `sdd.py prune` 执行 (`--keep` 保留某项). 三样都是过程产物: 草稿在 docs review 里已被当证据核过
   (见 review-lanes 车道 A), 结论进了 CR 与 REQ; spec 的落点已写进 CR 第 5 节. CR 不动 --
   它是业务文档, 工程教训不进去, 反查靠 lessons.md 的来源列. 之后的 review 与实施都先读错题本,
   次数 >= 2 的必查.
@@ -111,17 +110,18 @@ review: to fix -> fixing -> fixed -> (CR fixed 后) 提炼进 lessons.md -> 删�
 ## 流程
 
 ```
-/draft <slug>          想清楚 (只读代码, 不写代码)           -> notcommit/<slug>/draft/
+/draft <slug>          想清楚 (只读代码, 不写代码)           -> draft/<slug>/
 /req <slug>            写 REQ: 已有业务收集现行逻辑,         -> req/REQ-NNN-<slug>.md
                        全新业务写本期目标形态 (draft)
 /create-cr <slug>      立 CR: 有 REQ 写 delta, 无则立项      -> cr/CR-NNN-<slug>.md   [to fix]
+                       (draft/<slug>/ 的草稿升格成 work/CR-NNN-<slug>/)
 /review-cr CR-NNN docs 审 CR + REQ delta                     -> reviews/01-docs.md
-/spec CR-NNN           写实施 spec (先侦察 file:line)         -> notcommit/CR-NNN-*/spec.md
+/spec CR-NNN           写实施 spec (先侦察 file:line)         -> work/CR-NNN-*/spec.md
 /review-cr CR-NNN spec 审实施计划                             -> reviews/02-spec.md
 /implement-cr CR-NNN   按 spec 分步实施 (TDD), 提交可跨步, 填落点   [CR: fixing]
 /review-cr CR-NNN impl 审实现                                 -> reviews/03-impl.md
 /implement-cr CR-NNN   落实: 更新 REQ 正文 + 变更记录, CR 置 fixed, 重生成 INDEX
-/review-cr CR-NNN distill  提炼教训进 lessons.md, 清理工作目录      -> lessons.md   [notcommit/CR-NNN-* 删除]
+/review-cr CR-NNN distill  提炼教训进 lessons.md, 清理工作目录      -> lessons.md   [work/CR-NNN-* 删除]
 ```
 
 `/implement-cr` 是 "做下一件事": 它先看状态 -- 有未处置的 review 发现就先处理, 有待办步骤就实施,
@@ -134,17 +134,17 @@ review 是软闸门: 跳过某次 review 直接往下走需要人明确说 "跳�
 
 **六个命令里只有 review 能并行**. 三次 review 的车道之间本来就互斥, 可以一个车道派一个 agent
 并行审再合成一份 (怎么做见 `review-cr` 的 `## 并行审`). 用不用并行**在 `/create-cr` 立 CR 时问
-用户一次**, 答案写进工作目录的 `.parallel` (`yes` / `no`, notcommit 不入库, `sdd.py status` 会
-显示); 三次 review 都读它, 不重问 -- 三次 review 横跨好几天好几个会话, 每次问就是每次打断.
+用户一次**, 答案写进工作目录的 `.parallel` (`yes` / `no`, `sdd.py status` 会显示); 三次 review
+都读它, 不重问 -- 三次 review 横跨好几天好几个会话, 每次问就是每次打断.
 环境不支持 (没 tmux, 或 codex / pi 都不在 PATH) 就不问也不写, 读不到即串行.
 `/draft` `/req` `/create-cr` `/spec` `/implement-cr` 都是串行的活: spec 是一份连贯文档, 拆开写
 会互相矛盾; 分步实施前后依赖, 并行只会制造冲突, 真要并行写还得先做 worktree 隔离.
 
 ## 提交
 
-**只有代码改动值得单独一个提交.** 文档不占提交: `notcommit/` 下的 spec / review / draft 本来
-就不入库; 入库的 REQ / CR 搭在同一分支的代码提交里走 (落实那一步与 REQ 更新同一个提交), 不要
-为 "写完 CR" "审完 docs" 单独提交一次 -- 那两步没有代码, 提交里只有文档, 合进主干就是纯噪音.
+**只有代码改动值得单独一个提交.** 文档不占提交: REQ / CR 与 `draft/` `work/` 下的草稿 / spec / review
+都搭在同一分支的代码提交里走 (落实那一步与 REQ 更新同一个提交), 不要为 "写完 CR" "审完 docs"
+单独提交一次 -- 那两步没有代码, 提交里只有文档, 合进主干就是纯噪音.
 
 **一个提交可以覆盖连续几步**, 前提是这几步的回退单元一体; 一个提交不能只做半步. 详见
 `implement-cr` 的分步实施那节.
@@ -208,6 +208,22 @@ OQ 的四段格式 (问题 / 已按 / 理由 / 影响) 见 `auto-cr` 的 "歧义
 **无论哪种模式都必须当场停**的越权项: 要动 CR 影响范围之外的 REQ 条目; 要改已 fixed 的 review
 的结论; 要跳过某次 review; 迁移会销毁审计数据. 这几样代价不对称, 记 OQ 往下走等于把错误做实.
 
+### 被授权推进时, 做完一段接着做下一段
+
+用户说过 "推进到 X" / "一路做到 X" / "别问我" 之后, **六个命令谁都不许停在自己的汇报上**:
+汇报完跑 `sdd.py status CR-NNN --write`, 按它给的下一步接着做, 直到撞上停止条件.
+
+每个命令的最后一步都写着 "下一步是 X". **被授权时那不是给用户的提示, 是给你自己的指令**:
+`/review-cr` 审完不是任务完成, 是该 `/implement-cr` 处置了; 处置完不是完成, 是该复核了;
+复核完不是完成, 是该进下一阶段了. 一个命令的边界不是一次授权的边界 -- 用户授权的是把这个 CR
+推到某处, 不是 "执行一次 review-cr"。
+
+这一条最容易在 `/review-cr` 上失效: 它有完整的七步, 走完像是干完了一件事. 不是 -- 它只是
+`sdd.py status` 那条链上的一环.
+
+**盖不住的**: 越权四项 (见上一段), 以及 `auto-cr` 的六条停止条件 (到终点 / P0 超出 CR 范围 /
+测试两次修不好 / 越权 / 外包全失败 / 轮次用尽). 那几条任何模式都停.
+
 ### CR 已确认的逻辑 > review 的意见
 
 review 的 agent (尤其是派出去的 codex / pi) 读不到你和用户之前的讨论, 会把**用户已经拍板的设计**
@@ -219,7 +235,10 @@ review 的 agent (尤其是派出去的 codex / pi) 读不到你和用户之前�
 ## 每推进一步就贴进度
 
 做完任何一件让状态变化的事 -- 建了 review, 写完 spec, 提交了一步, 处置完发现, 置了 fixed --
-立刻跑一次 `sdd.py status CR-NNN --write`, **把进度表原样贴出来**, 再做下一件.
+立刻跑一次 `sdd.py status CR-NNN --write`, **把进度表原样贴出来**, 然后**接着做下一件**.
+
+贴进度是汇报, 不是交接: 贴完不要停下来等用户说 "继续". 该停的地方由各命令自己的规则定
+(段的边界, 越权项, 轮次上限), 与贴不贴进度无关.
 
 `--write` 会把同一份表落进工作目录的 `PROGRESS.md`. 这一份是给人看的: 用户想知道走到哪了,
 不必回头翻聊天记录, 也不必开口问 agent, 打开那个文件就是最新的. 它是生成物, 每次覆写,

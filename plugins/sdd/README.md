@@ -6,10 +6,10 @@ Python 3 标准库, Claude Code / Codex / pi 都能用.
 | skill | 做什么 | 产出 | 改代码? |
 |---|---|---|---|
 | `sdd` | 底座: 模板, 脚本, 约定; `/sdd` 看状态与下一步 | INDEX.md | 否 |
-| `draft` | 只读侦察 + 思考伙伴, 想清楚再立 CR | `notcommit/<slug>/draft/*.md` | 否 |
+| `draft` | 只读侦察 + 思考伙伴, 想清楚再立 CR | `draft/<slug>/*.md` | 否 |
 | `req` | 把现行业务逻辑写成 REQ (先收集旧的) | `req/REQ-NNN-<slug>.md` | 否 |
 | `create-cr` | 立一次工作单元: 变更 CR (按条目号写 delta) 或立项 CR (全新业务) | `cr/CR-NNN-<slug>.md` + 工作目录 | 否 |
-| `spec` | 写实施 spec: 侦察 (file:line) -> 改动总览 / 分步 / 测试 / 上线 | `notcommit/CR-NNN-*/spec.md` | 否 |
+| `spec` | 写实施 spec: 侦察 (file:line) -> 改动总览 / 分步 / 测试 / 上线 | `work/CR-NNN-*/spec.md` | 否 |
 | `implement-cr` | 做下一件事: 处理发现 / TDD 分步实施 / 落实 REQ | 提交, REQ 更新 | **是** |
 | `review-cr` | 三次 review: docs / spec / impl, 及复核; `distill` 模式把教训提炼进错题本并清理工作目录 | `reviews/0N-<stage>.md`, `lessons.md` | 否 |
 | `auto-cr` | 无人值守推进一个已立的 CR 到落实前: review 派给 tmux 里的 codex / pi 并行审, 业务歧义记成 OQ 往下走 | 提交, reviews, REQ 第 10 节的 OQ | **是** |
@@ -63,8 +63,9 @@ docs/sdd/
 ├── lessons.md                   错题本: 从已 fixed 的 review 提炼的模式 (入库)
 ├── req/REQ-NNN-<slug>.md        当前功能的结论 (入库)
 ├── cr/CR-NNN-<slug>.md          工作单元 (入库): 变更 CR 或立项 CR   to fix -> fixing -> fixed
-└── notcommit/                   不入库
-    └── CR-NNN-<slug>/{draft/, spec.md, reviews/01-docs.md 02-spec.md 03-impl.md}
+├── draft/<slug>/*.md            还没立 CR 的草稿 (入库); 立 CR 时整个升格进 work/
+└── work/CR-NNN-<slug>/          一个变更一个文件夹 (入库)
+    {<日期>-<主题>.md, spec.md, reviews/01-docs.md 02-spec.md 03-impl.md}
                                   CR fixed 并提炼后整个删除 (sdd.py prune)
 ```
 

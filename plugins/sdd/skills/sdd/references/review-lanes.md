@@ -19,7 +19,7 @@ review 的产出是 `reviews/0N-<stage>.md` (模板 `assets/templates/review.md`
 
 ## 01 docs: 审 CR + REQ delta (写 spec 之前)
 
-对象: `cr/CR-NNN-*.md`, 影响需求列出的每份 REQ, `notcommit/CR-NNN-*/draft/` 里的草稿.
+对象: `cr/CR-NNN-*.md`, 影响需求列出的每份 REQ, `work/CR-NNN-*/` 里的草稿.
 
 | 车道 | 要问的问题 |
 |---|---|
@@ -35,7 +35,7 @@ review 的产出是 `reviews/0N-<stage>.md` (模板 `assets/templates/review.md`
 
 ## 02 spec: 审实施计划 (写代码之前)
 
-对象: `notcommit/CR-NNN-*/spec.md`, 对照 CR 与 REQ.
+对象: `work/CR-NNN-*/spec.md`, 对照 CR 与 REQ.
 
 | 车道 | 要问的问题 |
 |---|---|

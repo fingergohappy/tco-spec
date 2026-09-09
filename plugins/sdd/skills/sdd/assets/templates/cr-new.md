@@ -68,7 +68,7 @@ REQ-NNN 全文.
 <!-- 由 /implement-cr 逐步填写. CR 置 fixed 的条件: 三次 review 都 fixed; REQ 与实现核对到位
      并置 implemented; REQ 变更记录首行写明由本 CR 立项; 代码与 REQ 更新在同一分支. -->
 
-- 实施 spec: notcommit/{{ID}}-{{SLUG}}/spec.md
+- 实施 spec: work/{{ID}}-{{SLUG}}/spec.md
 - review: docs - / spec - / impl -   <!-- 各自的状态与结论 -->
 - 实现提交:
 - REQ 更新提交:
