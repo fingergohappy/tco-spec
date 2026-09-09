@@ -18,6 +18,7 @@ docs/sdd/
 └── work/CR-NNN-<slug>/       # 立了 CR 之后, 一个变更一个文件夹 (入库)
     ├── <日期>-<主题>.md      # 草稿 / 侦察, 与 spec review 平级 (从 draft/<slug>/ 并进来)
     ├── spec.md               # 实施 spec: 改哪里, 按什么顺序, 怎么测, 怎么上线
+    ├── release.md            # 上线事实: 实施当中逐条记, 开 PR 时按项目的 PR 模板贴出去
     └── reviews/              # 三次 review (CR fixed 后提炼进 lessons.md, 然后删除)
         ├── 01-docs.md        #   CR + REQ delta (写 spec 之前)
         ├── 02-spec.md        #   实施 spec (写代码之前)

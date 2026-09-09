@@ -20,7 +20,7 @@
   index                   重新生成 INDEX.md
   lessons [--init] [--next-id]   错题本 docs/sdd/lessons.md: 摘要 / 建文件 / 下一个 L 编号
   prune <CR-NNN> [--dry-run] [--keep draft|spec|reviews]
-                          删除 CR 工作目录里的草稿 spec.md reviews/ (--keep 逐项保留);
+                          删除 CR 工作目录里的草稿 spec.md release.md reviews/ (--keep 逐项保留);
                           CR fixed, 各 review fixed 且头部 "提炼" 已填, 才删
 """
 import argparse
@@ -703,6 +703,8 @@ def fmt_reviews(st):
 
 
 PROGRESS_FILE = "PROGRESS.md"
+# 实施文档: 跟 spec 一起留 / 一起删 (--keep spec), 不算草稿
+SPEC_FILES = ("spec.md", "release.md")
 
 
 def render_cr_status(root, cr, st=None):
@@ -998,10 +1000,12 @@ def cmd_prune(args):
     targets = []
     if "draft" not in keep:
         for fn in sorted(os.listdir(d)):
-            if fn.endswith(".md") and fn not in ("spec.md", PROGRESS_FILE):
+            if fn.endswith(".md") and fn not in SPEC_FILES + (PROGRESS_FILE,):
                 targets.append((os.path.join(d, fn), False))
-    if "spec" not in keep and os.path.isfile(os.path.join(d, "spec.md")):
-        targets.append((os.path.join(d, "spec.md"), False))
+    if "spec" not in keep:
+        for fn in SPEC_FILES:
+            if os.path.isfile(os.path.join(d, fn)):
+                targets.append((os.path.join(d, fn), False))
     if "reviews" not in keep and os.path.isdir(rdir):
         targets.append((rdir, True))
     pf = os.path.join(d, ".parallel")

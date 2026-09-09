@@ -49,13 +49,22 @@ gh pr create --base <default> --head <branch> --title "<title>" --body "<body>"
 ```
 
 - **Title**: derived from the commits this branch adds (`git log --oneline origin/<default>..HEAD`). One commit → its subject. Several → what they add together, written in whatever style the recent history uses — read `git log --oneline -20` and match it (conventional prefixes, gitmoji, bare sentences: each repo differs, don't impose one).
-- **Body**: if `.github/pull_request_template.md` exists, **fill that template out** — don't ignore it and don't paste it back empty. Otherwise: what changed and why, then the commit list. Either way, add the ops section below.
+- **Body**: **the project's own template wins.** Look for one in this order, and stop at the first hit:
+  1. **`.github/pull_request_template.md`**, or a file under `.github/PULL_REQUEST_TEMPLATE/` — the standard location, and the one GitHub's own web UI serves, so it is what this repo's humans already see
+  2. a template named by the project's agent conventions (`CLAUDE.md` / `AGENTS.md` — grep them for `pr` / `template`), for a repo that deliberately keeps it elsewhere
+  3. anything matching `docs/**/pr-template*.md` or `docs/**/pull-request*.md`
+
+  **Fill it out** — don't ignore it, don't paste it back empty, don't reorder or drop its sections, and don't append a structure of your own next to it. A section that doesn't apply keeps its heading with `None` in the body (or whatever that template says to write). Templates written for this job usually carry their own instructions in an HTML comment at the top — follow those, then strip every comment and unreplaced placeholder before posting.
+
+  Only if there is no template anywhere: what changed and why, then the commit list, plus the ops section below.
 - **Language**: match the existing PRs (`gh pr list --limit 10 --json title,body`). Don't switch the repo to another language.
 - `--draft` if the user passed it.
 
 ### The ops section is not optional
 
 A PR body that only describes code leaves whoever deploys it to find out at deploy time that it needs a variable nobody set. **Work these out from the diff** — don't ask the user to recall them, and never write "none" without having looked.
+
+**If the project's template already covers this** — it has its own sections for migrations, env vars, runtime settings, verification — then fill *those* and do not add a second "Ops" heading beside them. The template's version is usually sharper than the generic table below, because it names this project's own hazards. The table is the fallback for a repo with no template, and a checklist for reading one: if the template has no row for something the diff needs, that item still has to reach the body somewhere.
 
 ```sh
 git diff origin/<default>...HEAD --stat
@@ -86,7 +95,7 @@ Write it as a checklist, so the person deploying can tick items off:
 
 If the diff genuinely needs no ops work, say **"Ops: none"** explicitly. A missing section reads as "nobody thought about it"; an explicit "none" reads as "checked, nothing needed".
 
-If the project keeps a deployment checklist for this change elsewhere (an sdd implementation spec has one in its release section), take the items from there rather than re-deriving them — but still put them in the PR body, because the reviewer and the deployer read the PR, not that file.
+If the project keeps a deployment checklist for this change elsewhere, take the items from there rather than re-deriving them — a repo on the sdd workflow accumulates them in `docs/sdd/work/CR-NNN-*/release.md` while the code is being written, which is where facts like "the previous binary cannot run on the new schema" and the actual last line of a verification command are recorded at the moment they are known. Still put them in the PR body: the reviewer and the deployer read the PR, not that file.
 
 Report the PR URL as soon as it exists. That is the deliverable; everything after this point is optional.
 
